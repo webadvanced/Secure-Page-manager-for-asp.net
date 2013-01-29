@@ -11,7 +11,7 @@
             secureUrls.AddRegex(@"(.*)account", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Singleline);
 
             //Secure Cart
-            secureUrls.Add("/cart");
+            secureUrls.AddUrl("/cart");
 
             //Custom rules
             SecurePagesConfiguration.RegisterCustomMatchRule(c => string.Equals(c.Request.Headers["X-Forwarded-Proto"], "https", StringComparison.InvariantCultureIgnoreCase));

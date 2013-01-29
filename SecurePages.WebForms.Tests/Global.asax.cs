@@ -24,7 +24,7 @@ namespace SecurePages.WebForms.Tests
             SecurePagesConfiguration.Urls.AddRegex(@"(.*)account", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Singleline);
 
             //Secure Cart
-            SecurePagesConfiguration.Urls.Add("/cart");
+            SecurePagesConfiguration.Urls.AddUrl("/cart");
 
             //Custom rules
             SecurePagesConfiguration.RegisterCustomMatchRule(c => string.Equals(c.Request.Headers["X-Forwarded-Proto"], "https", StringComparison.InvariantCultureIgnoreCase));

@@ -23,12 +23,13 @@
             this.urls.Add(url);
         }
 
-        public void Add(string url, SecureUrlMatchType matchType = SecureUrlMatchType.CaseInsensitive) {
+        public void AddUrl(string url, bool caseInsensitive = true)
+        {
             if(string.IsNullOrEmpty(url)) {
                 throw new ArgumentException("url");
             }
             
-            this.urls.Add(new SecureUrl { MatchType = matchType, Url = url });
+            this.urls.Add(new SecureUrl { MatchType = (caseInsensitive) ? SecureUrlMatchType.CaseInsensitive : SecureUrlMatchType.CaseSensitive, Url = url });
         }
 
         public void AddRegex(string pattern, RegexOptions regexOptions = RegexOptions.None) {

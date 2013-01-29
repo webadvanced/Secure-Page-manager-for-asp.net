@@ -90,7 +90,7 @@
             var collection = new SecureUrlCollection();
 
             // Act
-            collection.Add("mock/url");
+            collection.AddUrl("mock/url");
 
             // Assert
             Assert.NotEmpty(collection);
@@ -103,7 +103,7 @@
             var collection = new SecureUrlCollection();
 
             // Act
-            collection.Add("mock/url");
+            collection.AddUrl("mock/url");
             SecureUrl secureUrl = collection.First();
 
             // Assert
@@ -116,7 +116,7 @@
             var collection = new SecureUrlCollection();
 
             // Act
-            collection.Add("mock/url", SecureUrlMatchType.CaseSensitive);
+            collection.AddUrl("mock/url", false);
             SecureUrl secureUrl = collection.First();
 
             // Assert
@@ -129,16 +129,16 @@
             var collection = new SecureUrlCollection();
 
             // Act // Assert
-            Assert.Throws<ArgumentException>(() => collection.Add(string.Empty, SecureUrlMatchType.CaseSensitive));
-            Assert.Throws<ArgumentException>(() => collection.Add(null, SecureUrlMatchType.CaseInsensitive));
+            Assert.Throws<ArgumentException>(() => collection.AddUrl(string.Empty, false));
+            Assert.Throws<ArgumentException>(() => collection.AddUrl(null, true));
         }
 
         [Fact]
         public void Clear_ShouldEmptyAllEntriesFromCollection() {
             // arrange
             var collection = new SecureUrlCollection();
-            collection.Add("mock/url");
-            collection.Add("mock/url2");
+            collection.AddUrl("mock/url");
+            collection.AddUrl("mock/url2");
 
             // assert
             Assert.NotEmpty(collection);

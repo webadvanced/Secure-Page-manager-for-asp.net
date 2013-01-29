@@ -19,7 +19,7 @@ namespace SecurePages.Tests {
         public void IsSecureUrl_ShouldCallRegexMatch_WhenSecureUrlMatchTypeIsRegex() {
             // arrange
             SecurePagesConfiguration.Urls.Clear();
-            SecurePagesConfiguration.Urls.Add("mock/url", SecureUrlMatchType.Regex);
+            SecurePagesConfiguration.Urls.AddRegex("mock/url");
             string url = "mock/url";
             bool wasCalled = false;
             Func<string, SecureUrl, bool> regexMatchFunc = (s, su) => {
@@ -38,7 +38,7 @@ namespace SecurePages.Tests {
         public void IsSecureUrl_ShouldReturnFalse_WhenUrlIsNullOrEmpty() {
             // arrange
             SecurePagesConfiguration.Urls.Clear();
-            SecurePagesConfiguration.Urls.Add("mockUrl");
+            SecurePagesConfiguration.Urls.AddUrl("mockUrl");
             string nullUrl = null;
             string emptyStringUrl = string.Empty;
 
@@ -55,7 +55,7 @@ namespace SecurePages.Tests {
         public void IsSecureUrl_ShouldIgnoreCase_WhenMatchTypeIsCaseInsensitive() {
             // arrange
             SecurePagesConfiguration.Urls.Clear();
-            SecurePagesConfiguration.Urls.Add("mock/url");            
+            SecurePagesConfiguration.Urls.AddUrl("mock/url");            
             string lowerCaseUrl = "mock/url";
             string upperCaseUrl = "Mock/URL";
 
@@ -72,7 +72,7 @@ namespace SecurePages.Tests {
         public void IsSecureUrl_ShouldMatchCase_WhenMatchTypeIsCaseSensitive() {
             // arrange
             SecurePagesConfiguration.Urls.Clear();
-            SecurePagesConfiguration.Urls.Add("mock/url", SecureUrlMatchType.CaseSensitive);
+            SecurePagesConfiguration.Urls.AddUrl("mock/url", false);
             string lowerCaseUrl = "mock/url";
             string upperCaseUrl = "Mock/URL";
 
@@ -89,8 +89,8 @@ namespace SecurePages.Tests {
         public void IsSecureUrl_ShouldBreakOnFirstMatch() {
             // arrange
             SecurePagesConfiguration.Urls.Clear();
-            SecurePagesConfiguration.Urls.Add("mock/url");
-            SecurePagesConfiguration.Urls.Add("url/mocking");
+            SecurePagesConfiguration.Urls.AddUrl("mock/url");
+            SecurePagesConfiguration.Urls.AddUrl("url/mocking");
             string url = "mock/url";
 
             // act
