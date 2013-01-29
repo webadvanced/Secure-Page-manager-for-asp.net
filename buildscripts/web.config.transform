@@ -1,0 +1,7 @@
+<configuration>
+  <system.webServer>
+    <modules>
+      <add name="SecurePageModule" type="SecurePages.Infrastructure.SecurePageModule" />
+    </modules>
+  </system.webServer>
+</configuration>

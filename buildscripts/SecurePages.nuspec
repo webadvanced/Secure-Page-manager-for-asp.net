@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>SecurePages</id>
+    <version></version>
+    <authors>Web Advanced</authors>
+    <projectUrl>https://github.com/webadvanced/SecurePages</projectUrl>
+    <iconUrl>http://google.com/fff.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>1</description>
+    <summary></summary>
+    <language>en-US</language>
+    <dependencies>
+      <dependency id="WebActivator" version="1.5" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="lib\content\**\*.pp" target="content" />
+    <file src="lib\content\**\*.txt" target="content" />
+    <file src="lib\content\*.transform" target="content"/>
+    <file src="lib\SecurePages.dll" target="lib" />
+  </files>
+</package>
