@@ -7,7 +7,7 @@
     <projectUrl>https://github.com/webadvanced/SecurePages</projectUrl>
     <iconUrl>http://google.com/fff.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <license>https://github.com/webadvanced/Secure-Page-manager-for-asp.net/blob/master/LICENSE</license>
+    <licenseUrl>https://github.com/webadvanced/Secure-Page-manager-for-asp.net/blob/master/LICENSE</licenseUrl>
     <description>Secure pages is a simple way to manage https and non-https for asp.net sites.  Specify specific urls, use regular expressions, define custom rules and force all non-specified urls to http.</description>
     <summary>Simple way to manage https and non-https for asp.net sites</summary>
     <language>en-US</language>
