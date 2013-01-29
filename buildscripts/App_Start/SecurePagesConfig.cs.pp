@@ -22,8 +22,10 @@ public static void RegisterSecurePagesConfigurations() {
             //Registering a custom rule (Example for AppHarbor)
             //SecurePagesConfiguration.RegisterCustomMatchRule(c => string.Equals(c.Request.Headers["X-Forwarded-Proto"], "https", StringComparison.InvariantCultureIgnoreCase));
 
-            //For testing only
-            //SecurePagesConfiguration.IgnoreLocalRequests = false;
+            //For testing only.  By default, secure pages will ignore all request from localhost
+            #if DEBUG
+            SecurePagesConfiguration.IgnoreLocalRequests = false;
+            #endif
         }
     }
 }

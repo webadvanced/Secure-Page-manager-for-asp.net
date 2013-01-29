@@ -1,6 +1,25 @@
 #Secure Pages#
 
-Secure pages is a simple way to manage https and non-https for asp.net sites.  Specify specific urls, use regular expressions, define custom rules and force all non-specified urls to http.  
+Secure pages is a simple way to manage https and non-https for asp.net MVC and Web Forms sites.  Specify specific urls, use regular expressions, define custom rules and force all non-specified urls to http.  
+
+**What it adds to your solution**
+
+Two Files:
+
+- App_Start/SecurePagesConfig.cs
+- App_Readme/securepages.readme.txt
+
+One Web.config alteration:
+
+```
+<configuration>
+  <system.webServer>
+    <modules>
+      <add name="SecurePageModule" type="SecurePages.Infrastructure.SecurePageModule" />
+    </modules>
+  </system.webServer>
+</configuration>
+```
 
 #Usage#
 
@@ -45,6 +64,8 @@ The delegate signature is Func<HttpContextBase, bool> and should return true if 
 ```C#
 SecurePagesConfiguration.IgnoreLocalRequests = true;
 ```
+
+By default, secure pages will ignore all request from localhost
 
 
 

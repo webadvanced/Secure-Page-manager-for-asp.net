@@ -34,7 +34,9 @@ namespace SecurePages.WebForms.Tests
                 });
 
             //For testing only
+#if DEBUG
             SecurePagesConfiguration.IgnoreLocalRequests = false;
+#endif
 
         }
 
