@@ -4,10 +4,10 @@ using SecurePages.Infrastructure;
 using System.Text.RegularExpressions;
 using System;
 
-[assembly: WebActivator.PostApplicationStartMethod(typeof($rootnamespace$.App_Start.SecurePages), "Start")]
+[assembly: WebActivator.PostApplicationStartMethod(typeof($rootnamespace$.App_Start.SecurePagesConfig), "Start")]
 
 namespace $rootnamespace$.App_Start {
-    public static class SecurePages {
+    public static class SecurePagesConfig {
         public static void Start() {
             RegisterSecurePagesConfigurations();            
         }

@@ -40,6 +40,13 @@ SecurePagesConfiguration.RegisterCustomMatchRule(c =>
 
 The delegate signature is Func<HttpContextBase, bool> and should return true if the request is https.
 
+##For Local Testing##
+
+```C#
+SecurePagesConfiguration.IgnoreLocalRequests = true;
+```
+
+
 
 
 

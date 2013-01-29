@@ -24,10 +24,14 @@ namespace SecurePages.WebForms.Tests
             SecurePagesConfiguration.Urls.AddRegex(@"(.*)account", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Singleline);
 
             //Secure Cart
-            SecurePagesConfiguration.Urls.AddUrl("/cart");
+            SecurePagesConfiguration.Urls.AddUrl("/cart", caseInsensitive:false);
 
             //Custom rules
-            SecurePagesConfiguration.RegisterCustomMatchRule(c => string.Equals(c.Request.Headers["X-Forwarded-Proto"], "https", StringComparison.InvariantCultureIgnoreCase));
+            SecurePagesConfiguration.RegisterCustomMatchRule(c =>
+                {
+                    return string.Equals(c.Request.Headers["X-Forwarded-Proto"], "https",
+                                  StringComparison.InvariantCultureIgnoreCase);
+                });
 
             //For testing only
             SecurePagesConfiguration.IgnoreLocalRequests = false;
