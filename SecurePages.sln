@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecurePages", "HTTPSManager.MVC\SecurePages.csproj", "{0EA1A5C3-E06B-4000-8D10-76D1C53E6F0E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecurePages", "SecurePages\SecurePages.csproj", "{0EA1A5C3-E06B-4000-8D10-76D1C53E6F0E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecurePages.Tests", "HTTPManager.MVC.Tests\SecurePages.Tests.csproj", "{22417842-7DB3-477E-A0DD-A1B9875D65E4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecurePages.Tests", "SecurePages.Tests\SecurePages.Tests.csproj", "{22417842-7DB3-477E-A0DD-A1B9875D65E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecurePages.Mvc.Tests", "HTTPSManager.MVC.Web.Tests\SecurePages.Mvc.Tests.csproj", "{316B9782-AFCF-4A46-B9FC-4A367C28645A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecurePages.Mvc.Tests", "SecurePages.MVC.Tests\SecurePages.Mvc.Tests.csproj", "{316B9782-AFCF-4A46-B9FC-4A367C28645A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecurePages.WebForms.Tests", "SecurePages.WebForms.Tests\SecurePages.WebForms.Tests.csproj", "{F3E32831-F6B0-4540-BEB5-593715A1C091}"
 EndProject

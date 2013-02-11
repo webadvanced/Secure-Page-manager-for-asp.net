@@ -321,7 +321,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HTTPSManager.MVC\SecurePages.csproj">
+    <ProjectReference Include="..\SecurePages\SecurePages.csproj">
       <Project>{0ea1a5c3-e06b-4000-8d10-76d1c53e6f0e}</Project>
       <Name>SecurePages</Name>
     </ProjectReference>
