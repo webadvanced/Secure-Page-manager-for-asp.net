@@ -17,6 +17,8 @@
         static SecurePagesConfiguration() {
             SecureUrlCollection = new SecureUrlCollection();
             IgnoreLocalRequests = true;
+            HttpValue = "Http://";
+            HttpsValue = "Https://";
             CustomMatchRuleCollection = new List<Func<HttpContextBase, bool>>();
         }
 
@@ -49,6 +51,10 @@
         #region Properties
 
         public static bool IgnoreLocalRequests { get; set; }
+
+        public static string HttpValue { get; set; }
+
+        public static string HttpsValue { get; set; }
 
         #endregion
     }

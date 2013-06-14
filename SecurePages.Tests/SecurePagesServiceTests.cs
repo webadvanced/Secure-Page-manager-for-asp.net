@@ -1,6 +1,7 @@
 ﻿using System.Collections.Specialized;
 
-namespace SecurePages.Tests {
+namespace SecurePages.Tests
+{
     using System;
     using System.Web;
 
@@ -12,17 +13,20 @@ namespace SecurePages.Tests {
 
     using Xunit;
 
-    public class SecurePagesServiceTests {
+    public class SecurePagesServiceTests
+    {
         #region Public Methods and Operators
 
         [Fact]
-        public void IsSecureUrl_ShouldCallRegexMatch_WhenSecureUrlMatchTypeIsRegex() {
+        public void IsSecureUrl_ShouldCallRegexMatch_WhenSecureUrlMatchTypeIsRegex()
+        {
             // arrange
             SecurePagesConfiguration.Urls.Clear();
             SecurePagesConfiguration.Urls.AddRegex("mock/url");
             string url = "mock/url";
             bool wasCalled = false;
-            Func<string, SecureUrl, bool> regexMatchFunc = (s, su) => {
+            Func<string, SecureUrl, bool> regexMatchFunc = (s, su) =>
+            {
                 wasCalled = true;
                 return false;
             };
@@ -35,7 +39,8 @@ namespace SecurePages.Tests {
         }
 
         [Fact]
-        public void IsSecureUrl_ShouldReturnFalse_WhenUrlIsNullOrEmpty() {
+        public void IsSecureUrl_ShouldReturnFalse_WhenUrlIsNullOrEmpty()
+        {
             // arrange
             SecurePagesConfiguration.Urls.Clear();
             SecurePagesConfiguration.Urls.AddUrl("mockUrl");
@@ -52,10 +57,11 @@ namespace SecurePages.Tests {
         }
 
         [Fact]
-        public void IsSecureUrl_ShouldIgnoreCase_WhenMatchTypeIsCaseInsensitive() {
+        public void IsSecureUrl_ShouldIgnoreCase_WhenMatchTypeIsCaseInsensitive()
+        {
             // arrange
             SecurePagesConfiguration.Urls.Clear();
-            SecurePagesConfiguration.Urls.AddUrl("mock/url");            
+            SecurePagesConfiguration.Urls.AddUrl("mock/url");
             string lowerCaseUrl = "mock/url";
             string upperCaseUrl = "Mock/URL";
 
@@ -69,7 +75,8 @@ namespace SecurePages.Tests {
         }
 
         [Fact]
-        public void IsSecureUrl_ShouldMatchCase_WhenMatchTypeIsCaseSensitive() {
+        public void IsSecureUrl_ShouldMatchCase_WhenMatchTypeIsCaseSensitive()
+        {
             // arrange
             SecurePagesConfiguration.Urls.Clear();
             SecurePagesConfiguration.Urls.AddUrl("mock/url", false);
@@ -86,7 +93,8 @@ namespace SecurePages.Tests {
         }
 
         [Fact]
-        public void IsSecureUrl_ShouldBreakOnFirstMatch() {
+        public void IsSecureUrl_ShouldBreakOnFirstMatch()
+        {
             // arrange
             SecurePagesConfiguration.Urls.Clear();
             SecurePagesConfiguration.Urls.AddUrl("mock/url");
@@ -101,17 +109,20 @@ namespace SecurePages.Tests {
         }
 
         [Fact]
-        public void HandleRequest_ShouldNotCallResponseHandler_WhenIsSecureRequestAndIsSecureUrlAreFalse() {
+        public void HandleRequest_ShouldNotCallResponseHandler_WhenIsSecureRequestAndIsSecureUrlAreFalse()
+        {
             // arrange
             bool isSecureRequest = false;
             bool isSecureUrl = false;
             var context = new Mock<HttpContextBase>();
+            string httpValue = "Http://";
+            string httpsValue = "Https://";
             bool flag = false;
             Action<HttpContextBase, string> responseHandler = (c, u) => flag = true;
             SecurePagesConfiguration.IgnoreLocalRequests = false;
-
+           
             // act
-            SecurePagesService.HandelRequest(isSecureRequest, isSecureUrl, context.Object, responseHandler);
+            SecurePagesService.HandelRequest(isSecureRequest, isSecureUrl, context.Object, httpValue, httpsValue, responseHandler);
 
             // assert
             Assert.False(flag);
@@ -124,12 +135,14 @@ namespace SecurePages.Tests {
             bool isSecureRequest = true;
             bool isSecureUrl = true;
             var context = new Mock<HttpContextBase>();
+            string httpValue = "Http://";
+            string httpsValue = "Https://";
             bool flag = false;
             Action<HttpContextBase, string> responseHandler = (c, u) => flag = true;
             SecurePagesConfiguration.IgnoreLocalRequests = false;
 
             // act
-            SecurePagesService.HandelRequest(isSecureRequest, isSecureUrl, context.Object, responseHandler);
+            SecurePagesService.HandelRequest(isSecureRequest, isSecureUrl, context.Object, httpValue, httpsValue, responseHandler);
 
             // assert
             Assert.False(flag);
@@ -142,24 +155,29 @@ namespace SecurePages.Tests {
             bool isSecureRequest = true;
             bool isSecureUrl = false;
             var context = new Mock<HttpContextBase>();
+            string httpValue = "Http://";
+            string httpsValue = "Https://";
             bool flag = false;
             Action<HttpContextBase, string> responseHandler = (c, u) => flag = true;
             SecurePagesConfiguration.IgnoreLocalRequests = true;
             context.Setup(x => x.Request.IsLocal).Returns(() => true);
 
             // act
-            SecurePagesService.HandelRequest(isSecureRequest, isSecureUrl, context.Object, responseHandler);
+            SecurePagesService.HandelRequest(isSecureRequest, isSecureUrl, context.Object, httpValue, httpsValue, responseHandler);
 
             // assert
             Assert.False(flag);
         }
 
         [Fact]
-        public void HandleRequest_WhenRequestIsNotSecureAndUrlIsSupposedToBeSecureResponseHandlerIsCalledAndPassedSecureVersionOfUrl() {
+        public void HandleRequest_WhenRequestIsNotSecureAndUrlIsSupposedToBeSecureResponseHandlerIsCalledAndPassedSecureVersionOfUrl()
+        {
             // arrange
             bool isSecureRequest = false;
             bool isSecureUrl = true;
             var context = new Mock<HttpContextBase>();
+            string httpValue = "Http://";
+            string httpsValue = "Https://";
             string responseUrl = string.Empty;
             Action<HttpContextBase, string> responseHandler = (c, u) => responseUrl = u;
             SecurePagesConfiguration.IgnoreLocalRequests = false;
@@ -167,7 +185,7 @@ namespace SecurePages.Tests {
             context.Setup(x => x.Request.Url).Returns(() => new Uri("http://www.webadvanced.com/"));
 
             // act
-            SecurePagesService.HandelRequest(isSecureRequest, isSecureUrl, context.Object, responseHandler);
+            SecurePagesService.HandelRequest(isSecureRequest, isSecureUrl, context.Object, httpValue, httpsValue, responseHandler);
 
             // assert
             Assert.NotEmpty(responseUrl);
@@ -181,6 +199,8 @@ namespace SecurePages.Tests {
             bool isSecureRequest = true;
             bool isSecureUrl = false;
             var context = new Mock<HttpContextBase>();
+            string httpValue = "Http://";
+            string httpsValue = "Https://";
             string responseUrl = string.Empty;
             Action<HttpContextBase, string> responseHandler = (c, u) => responseUrl = u;
             SecurePagesConfiguration.IgnoreLocalRequests = false;
@@ -188,7 +208,7 @@ namespace SecurePages.Tests {
             context.Setup(x => x.Request.Url).Returns(() => new Uri("https://www.webadvanced.com/"));
 
             // act
-            SecurePagesService.HandelRequest(isSecureRequest, isSecureUrl, context.Object, responseHandler);
+            SecurePagesService.HandelRequest(isSecureRequest, isSecureUrl, context.Object, httpValue, httpsValue, responseHandler);
 
             // assert
             Assert.NotEmpty(responseUrl);
@@ -196,7 +216,8 @@ namespace SecurePages.Tests {
         }
 
         [Fact]
-        public void RedirectPermanent_ShouldThrowArgumentNullException_WhenContextIsNull() {
+        public void RedirectPermanent_ShouldThrowArgumentNullException_WhenContextIsNull()
+        {
             Assert.Throws<ArgumentNullException>(
                 () => SecurePagesService.RedirectPermanent(null, "http://www.webadvanced.com"));
         }
@@ -205,7 +226,7 @@ namespace SecurePages.Tests {
         public void RedirectPermanent_ShouldThrowArgumentException_WhenUrlIsEmptyOrNull()
         {
             var context = new Mock<HttpContextBase>();
-            
+
             Assert.Throws<ArgumentException>(
                 () => SecurePagesService.RedirectPermanent(context.Object, string.Empty));
 
@@ -232,12 +253,12 @@ namespace SecurePages.Tests {
         {
             // arrange            
             var headers = new NameValueCollection();
-            headers.Add("Test-Secure-Connection","https");
-            
+            headers.Add("Test-Secure-Connection", "https");
+
             var context = new Mock<HttpContextBase>();
-            context.Setup(x => x.Request.Headers).Returns(()=>headers);
+            context.Setup(x => x.Request.Headers).Returns(() => headers);
             context.Setup(x => x.Request.IsSecureConnection).Returns(() => false);
-            
+
             SecurePagesConfiguration.CustomMatchRules.Clear();
             SecurePagesConfiguration.RegisterCustomMatchRule(
                 c => string.Equals(c.Request.Headers["Test-Secure-Connection"], "https", StringComparison.InvariantCultureIgnoreCase));
@@ -257,8 +278,8 @@ namespace SecurePages.Tests {
             // arrange
             var headers = new NameValueCollection();
             headers.Add("Test-Secure-Connection", "http");
-            
-            var context = new Mock<HttpContextBase>();            
+
+            var context = new Mock<HttpContextBase>();
             context.Setup(x => x.Request.Headers).Returns(() => headers);
             context.Setup(x => x.Request.IsSecureConnection).Returns(() => false);
 
