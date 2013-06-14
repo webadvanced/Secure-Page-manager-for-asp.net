@@ -9,7 +9,7 @@
     public class SecurePagesService {
         #region Public Methods and Operators
 
-        public static void HandelRequest(bool isSecureRequest, bool isSecureUrl, HttpContextBase context, Action<HttpContextBase, string>  responseHandler = null) {
+        public static void HandelRequest(bool isSecureRequest, bool isSecureUrl, HttpContextBase context, string httpValue, string httpsValue, Action<HttpContextBase, string> responseHandler = null){
             responseHandler = responseHandler ?? RedirectPermanent;
             // Exit asap if no action is needed
             if ((!isSecureRequest && !isSecureUrl) || (isSecureRequest && isSecureUrl)
@@ -23,12 +23,12 @@
             // If the url is supposed to be secure and the request is not
             if (isSecureUrl)
             {
-                responseHandler(context, absoluteUri.Replace("http://", "https://"));
+                responseHandler(context, absoluteUri.Replace(httpValue, httpsValue));
                 return;
             }
 
             // If the url is not supposed to be secure and the request is
-            responseHandler(context, absoluteUri.Replace("https://", "http://"));
+            responseHandler(context, absoluteUri.Replace(httpsValue, httpValue));
         }
 
         public static bool IsSecureRequest(HttpContextBase context) {
