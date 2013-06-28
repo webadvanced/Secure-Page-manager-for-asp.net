@@ -22,9 +22,14 @@ public static void RegisterSecurePagesConfigurations() {
             //Registering a custom rule (Example for AppHarbor)
             //SecurePagesConfiguration.RegisterCustomMatchRule(c => string.Equals(c.Request.Headers["X-Forwarded-Proto"], "https", StringComparison.InvariantCultureIgnoreCase));
 
+					
             //For testing only.  By default, secure pages will ignore all request from localhost
             #if DEBUG
             SecurePagesConfiguration.IgnoreLocalRequests = false;
+			
+			//Optional
+			//SecurePagesConfiguration.HttpRootUrl = "http://localhost:50535/";
+            //SecurePagesConfiguration.HttpsRootUrl = "https://localhost:44300/";
             #endif
         }
     }
