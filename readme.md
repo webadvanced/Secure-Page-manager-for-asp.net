@@ -59,6 +59,15 @@ SecurePagesConfiguration.RegisterCustomMatchRule(c =>
 
 The delegate signature is Func<HttpContextBase, bool> and should return true if the request is https.
 
+##Specify secure and unsecure root URLs
+
+By default, secure pages will use the current URL and just alter the protocol too and from http(s). If your secure domain is different (https://secure.mydomain.com/), you will need to explicitly set the secure and nonsecure URLs.
+
+```C#
+SecurePagesConfiguration.HttpRootUrl = "http://yourdomain.com/";
+SecurePagesConfiguration.HttpsRootUrl = "https://yourdomain.com/";
+```
+
 ##For Local Testing##
 
 ```C#
