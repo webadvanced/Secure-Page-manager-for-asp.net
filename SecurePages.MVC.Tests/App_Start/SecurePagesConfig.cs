@@ -20,8 +20,8 @@
             SecurePagesConfiguration.IgnoreLocalRequests = false;
 
             //For testing with a different domain 
-            // SecurePagesConfiguration.HttpValue = "http://localhost:63670/";
-            // SecurePagesConfiguration.HttpsValue = "https://localhost:44300/";
+            // SecurePagesConfiguration.HttpRootUrl = "http://localhost:63670/";
+            // SecurePagesConfiguration.HttpsRootUrl = "https://localhost:44300/";
         }
 
         #endregion

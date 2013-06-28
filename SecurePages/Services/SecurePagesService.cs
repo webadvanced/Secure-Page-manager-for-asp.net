@@ -1,5 +1,6 @@
 ﻿namespace SecurePages.Services {
     using System;
+    using System.Security.Policy;
     using System.Text.RegularExpressions;
     using System.Web;
 
@@ -9,7 +10,7 @@
     public class SecurePagesService {
         #region Public Methods and Operators
 
-        public static void HandelRequest(bool isSecureRequest, bool isSecureUrl, HttpContextBase context, string httpValue, string httpsValue, Action<HttpContextBase, string> responseHandler = null){
+        public static void HandelRequest(bool isSecureRequest, bool isSecureUrl, HttpContextBase context, Action<HttpContextBase, string> responseHandler = null){
             responseHandler = responseHandler ?? RedirectPermanent;
             // Exit asap if no action is needed
             if ((!isSecureRequest && !isSecureUrl) || (isSecureRequest && isSecureUrl)
@@ -18,17 +19,17 @@
                 return;
             }
 
-            string absoluteUri = context.Request.Url.AbsoluteUri;
+            Uri uri = context.Request.Url;
 
             // If the url is supposed to be secure and the request is not
             if (isSecureUrl)
             {
-                responseHandler(context, absoluteUri.Replace(httpValue, httpsValue));
+                responseHandler(context, SecureUrl(uri));
                 return;
             }
 
             // If the url is not supposed to be secure and the request is
-            responseHandler(context, absoluteUri.Replace(httpsValue, httpValue));
+            responseHandler(context, NonSecureUrl(uri));
         }
 
         public static bool IsSecureRequest(HttpContextBase context) {
@@ -42,6 +43,18 @@
 
             // Check if the request is secure
             return context.Request.IsSecureConnection;
+        }
+
+        public static string SecureUrl(Uri  uri)  {
+            return string.IsNullOrEmpty(SecurePagesConfiguration.HttpsRootUrl) 
+                            ? uri.AbsoluteUri.Replace("http", "https")
+                            : string.Format("{0}{1}", SecurePagesConfiguration.HttpsRootUrl, uri.PathAndQuery);
+        }
+
+        public static string NonSecureUrl(Uri uri) {
+            return string.IsNullOrEmpty(SecurePagesConfiguration.HttpRootUrl)
+                            ? uri.AbsoluteUri.Replace("https", "http")
+                            : string.Format("{0}{1}", SecurePagesConfiguration.HttpRootUrl, uri.PathAndQuery);
         }
 
         public static bool IsSecureUrl(string url, Func<string, SecureUrl, bool> matchRegexFunc = null) {

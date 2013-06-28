@@ -115,14 +115,12 @@ namespace SecurePages.Tests
             bool isSecureRequest = false;
             bool isSecureUrl = false;
             var context = new Mock<HttpContextBase>();
-            string httpValue = "Http://";
-            string httpsValue = "Https://";
             bool flag = false;
             Action<HttpContextBase, string> responseHandler = (c, u) => flag = true;
             SecurePagesConfiguration.IgnoreLocalRequests = false;
            
             // act
-            SecurePagesService.HandelRequest(isSecureRequest, isSecureUrl, context.Object, httpValue, httpsValue, responseHandler);
+            SecurePagesService.HandelRequest(isSecureRequest, isSecureUrl, context.Object, responseHandler);
 
             // assert
             Assert.False(flag);
@@ -135,14 +133,12 @@ namespace SecurePages.Tests
             bool isSecureRequest = true;
             bool isSecureUrl = true;
             var context = new Mock<HttpContextBase>();
-            string httpValue = "Http://";
-            string httpsValue = "Https://";
             bool flag = false;
             Action<HttpContextBase, string> responseHandler = (c, u) => flag = true;
             SecurePagesConfiguration.IgnoreLocalRequests = false;
 
             // act
-            SecurePagesService.HandelRequest(isSecureRequest, isSecureUrl, context.Object, httpValue, httpsValue, responseHandler);
+            SecurePagesService.HandelRequest(isSecureRequest, isSecureUrl, context.Object, responseHandler);
 
             // assert
             Assert.False(flag);
@@ -155,15 +151,13 @@ namespace SecurePages.Tests
             bool isSecureRequest = true;
             bool isSecureUrl = false;
             var context = new Mock<HttpContextBase>();
-            string httpValue = "Http://";
-            string httpsValue = "Https://";
             bool flag = false;
             Action<HttpContextBase, string> responseHandler = (c, u) => flag = true;
             SecurePagesConfiguration.IgnoreLocalRequests = true;
             context.Setup(x => x.Request.IsLocal).Returns(() => true);
 
             // act
-            SecurePagesService.HandelRequest(isSecureRequest, isSecureUrl, context.Object, httpValue, httpsValue, responseHandler);
+            SecurePagesService.HandelRequest(isSecureRequest, isSecureUrl, context.Object, responseHandler);
 
             // assert
             Assert.False(flag);
@@ -176,8 +170,6 @@ namespace SecurePages.Tests
             bool isSecureRequest = false;
             bool isSecureUrl = true;
             var context = new Mock<HttpContextBase>();
-            string httpValue = "Http://";
-            string httpsValue = "Https://";
             string responseUrl = string.Empty;
             Action<HttpContextBase, string> responseHandler = (c, u) => responseUrl = u;
             SecurePagesConfiguration.IgnoreLocalRequests = false;
@@ -185,7 +177,7 @@ namespace SecurePages.Tests
             context.Setup(x => x.Request.Url).Returns(() => new Uri("http://www.webadvanced.com/"));
 
             // act
-            SecurePagesService.HandelRequest(isSecureRequest, isSecureUrl, context.Object, httpValue, httpsValue, responseHandler);
+            SecurePagesService.HandelRequest(isSecureRequest, isSecureUrl, context.Object, responseHandler);
 
             // assert
             Assert.NotEmpty(responseUrl);
@@ -199,16 +191,16 @@ namespace SecurePages.Tests
             bool isSecureRequest = true;
             bool isSecureUrl = false;
             var context = new Mock<HttpContextBase>();
-            string httpValue = "Http://";
-            string httpsValue = "Https://";
             string responseUrl = string.Empty;
             Action<HttpContextBase, string> responseHandler = (c, u) => responseUrl = u;
             SecurePagesConfiguration.IgnoreLocalRequests = false;
+            SecurePagesConfiguration.HttpRootUrl = string.Empty;
+            SecurePagesConfiguration.HttpsRootUrl = string.Empty;
             context.Setup(x => x.Request.IsLocal).Returns(() => false);
             context.Setup(x => x.Request.Url).Returns(() => new Uri("https://www.webadvanced.com/"));
 
             // act
-            SecurePagesService.HandelRequest(isSecureRequest, isSecureUrl, context.Object, httpValue, httpsValue, responseHandler);
+            SecurePagesService.HandelRequest(isSecureRequest, isSecureUrl, context.Object, responseHandler);
 
             // assert
             Assert.NotEmpty(responseUrl);
@@ -292,6 +284,50 @@ namespace SecurePages.Tests
 
             // assert
             Assert.False(isSecureConnection);
+        }
+
+        [Fact]
+        public void NonSecureUrl_ShouldUseHttpRootUrl_WhenSpecified() {
+            // arrange
+            SecurePagesConfiguration.HttpRootUrl = "http://mock.com";
+            Uri uri = new Uri("https://mocksite.com/test?q=param");
+
+            string result = SecurePagesService.NonSecureUrl(uri);
+
+            Assert.Equal("http://mock.com/test?q=param", result);
+        }
+
+        [Fact]
+        public void NonSecureUrl_ShouldUseCurrentUrl_WhenHttpRootUrlIsNotSpecified() {
+            // arrange
+            SecurePagesConfiguration.HttpRootUrl = string.Empty;
+            Uri uri = new Uri("https://mocksite.com/test?q=param");
+
+            string result = SecurePagesService.NonSecureUrl(uri);
+
+            Assert.Equal("http://mocksite.com/test?q=param", result);
+        }
+
+        [Fact]
+        public void SecureUrl_ShouldUseHttpsRootUrl_WhenSpecified() {
+            // arrange
+            SecurePagesConfiguration.HttpsRootUrl = "https://mock.com";
+            Uri uri = new Uri("http://mocksite.com/test?q=param");
+
+            string result = SecurePagesService.SecureUrl(uri);
+
+            Assert.Equal("https://mock.com/test?q=param", result);
+        }
+
+        [Fact]
+        public void SecureUrl_ShouldUseCurrentUrl_WhenHttpsRootUrlIsNotSpecified() {
+            // arrange
+            SecurePagesConfiguration.HttpsRootUrl = string.Empty;
+            Uri uri = new Uri("http://mocksite.com/test?q=param");
+
+            string result = SecurePagesService.SecureUrl(uri);
+
+            Assert.Equal("https://mocksite.com/test?q=param", result);
         }
 
         #endregion

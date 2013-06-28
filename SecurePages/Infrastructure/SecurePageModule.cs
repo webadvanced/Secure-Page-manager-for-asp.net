@@ -24,9 +24,7 @@
             string url = context.Request.RawUrl;
             bool isSecureUrl = SecurePagesService.IsSecureUrl(url);
             bool isSecureRequest = SecurePagesService.IsSecureRequest(context);
-            string httpValue = SecurePagesConfiguration.HttpValue;
-            string httpsValue = SecurePagesConfiguration.HttpsValue;
-            SecurePagesService.HandelRequest(isSecureRequest, isSecureUrl, context, httpValue, httpsValue);
+            SecurePagesService.HandelRequest(isSecureRequest, isSecureUrl, context);
         }
         
         #endregion
