@@ -48,13 +48,13 @@
         public static string SecureUrl(Uri  uri)  {
             return string.IsNullOrEmpty(SecurePagesConfiguration.HttpsRootUrl) 
                             ? uri.AbsoluteUri.Replace("http", "https")
-                            : string.Format("{0}{1}", SecurePagesConfiguration.HttpsRootUrl, uri.PathAndQuery);
+                            : string.Format("{0}{1}", SecurePagesConfiguration.HttpsRootUrl, uri.PathAndQuery.TrimStart('/'));
         }
 
         public static string NonSecureUrl(Uri uri) {
             return string.IsNullOrEmpty(SecurePagesConfiguration.HttpRootUrl)
                             ? uri.AbsoluteUri.Replace("https", "http")
-                            : string.Format("{0}{1}", SecurePagesConfiguration.HttpRootUrl, uri.PathAndQuery);
+                            : string.Format("{0}{1}", SecurePagesConfiguration.HttpRootUrl, uri.PathAndQuery.TrimStart('/'));
         }
 
         public static bool IsSecureUrl(string url, Func<string, SecureUrl, bool> matchRegexFunc = null) {

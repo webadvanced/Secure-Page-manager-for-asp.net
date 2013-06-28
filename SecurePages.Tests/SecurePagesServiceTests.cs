@@ -289,7 +289,7 @@ namespace SecurePages.Tests
         [Fact]
         public void NonSecureUrl_ShouldUseHttpRootUrl_WhenSpecified() {
             // arrange
-            SecurePagesConfiguration.HttpRootUrl = "http://mock.com";
+            SecurePagesConfiguration.HttpRootUrl = "http://mock.com/";
             Uri uri = new Uri("https://mocksite.com/test?q=param");
 
             string result = SecurePagesService.NonSecureUrl(uri);
@@ -311,7 +311,7 @@ namespace SecurePages.Tests
         [Fact]
         public void SecureUrl_ShouldUseHttpsRootUrl_WhenSpecified() {
             // arrange
-            SecurePagesConfiguration.HttpsRootUrl = "https://mock.com";
+            SecurePagesConfiguration.HttpsRootUrl = "https://mock.com/";
             Uri uri = new Uri("http://mocksite.com/test?q=param");
 
             string result = SecurePagesService.SecureUrl(uri);

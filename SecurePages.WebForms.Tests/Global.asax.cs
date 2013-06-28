@@ -12,32 +12,16 @@ namespace SecurePages.WebForms.Tests
     using System.Text.RegularExpressions;
 
     using SecurePages.Infrastructure;
+    using SecurePages.WebForms.Tests.App_Start;
 
     public class Global : HttpApplication
     {
         void Application_Start(object sender, EventArgs e)
         {
             // Code that runs on application startup
+            SecurePagesConfig.RegisterUrls(SecurePagesConfiguration.Urls);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             AuthConfig.RegisterOpenAuth();
-
-            SecurePagesConfiguration.Urls.AddRegex(@"(.*)account", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Singleline);
-
-            //Secure Cart
-            SecurePagesConfiguration.Urls.AddUrl("/cart", caseInsensitive:false);
-
-            //Custom rules
-            SecurePagesConfiguration.RegisterCustomMatchRule(c =>
-                {
-                    return string.Equals(c.Request.Headers["X-Forwarded-Proto"], "https",
-                                  StringComparison.InvariantCultureIgnoreCase);
-                });
-
-            //For testing only
-#if DEBUG
-            SecurePagesConfiguration.IgnoreLocalRequests = false;
-#endif
-
         }
 
         void Application_End(object sender, EventArgs e)

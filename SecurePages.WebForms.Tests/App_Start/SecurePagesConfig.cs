@@ -1,5 +1,6 @@
-﻿namespace SecurePages.Mvc.Tests.App_Start {
+﻿namespace SecurePages.WebForms.Tests.App_Start {
     using SecurePages.Infrastructure;
+
     using System;
     using System.Text.RegularExpressions;
 
@@ -19,8 +20,8 @@
 #if DEBUG
             //For testing only
             SecurePagesConfiguration.IgnoreLocalRequests = false;
-            SecurePagesConfiguration.HttpRootUrl = "http://localhost:63670/";
-            SecurePagesConfiguration.HttpsRootUrl = "https://localhost:44301/";
+            SecurePagesConfiguration.HttpRootUrl = "http://localhost:50535/";
+            SecurePagesConfiguration.HttpsRootUrl = "https://localhost:44302/";
         }
 #endif
 
