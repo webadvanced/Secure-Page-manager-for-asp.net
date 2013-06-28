@@ -21,8 +21,9 @@
             SecurePagesConfiguration.IgnoreLocalRequests = false;
             SecurePagesConfiguration.HttpRootUrl = "http://localhost:63670/";
             SecurePagesConfiguration.HttpsRootUrl = "https://localhost:44301/";
-        }
 #endif
+        }
+
 
         #endregion
     }

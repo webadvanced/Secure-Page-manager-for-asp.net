@@ -6,7 +6,7 @@
 		<OutputDir>$(BuildDir)\$(Configuration)</OutputDir>
 		<PackageDir>$(BuildDir)\Packages</PackageDir>
 		<SolutionFile>$(BaseDir)\SecurePages.sln</SolutionFile>
-		<MSBuildExtensions>$(BaseDir)\packages\msbuild\msbuild.community.tasks.dll</MSBuildExtensions>
+		<MSBuildExtensions>$(BaseDir)\packages\MSBuildTasks.1.4.0.61\tools\msbuild.community.tasks.dll</MSBuildExtensions>
 	</PropertyGroup>
 	<UsingTask AssemblyFile="$(MSBuildExtensions)" TaskName="MSBuild.Community.Tasks.Zip" />
 	<UsingTask AssemblyFile="$(MSBuildExtensions)" TaskName="MSBuild.Community.Tasks.XmlUpdate" />
@@ -15,7 +15,7 @@
 	<Target Name="default" DependsOnTargets="Compile; Test; Deploy; Package" />
 
 	<Target Name="Test">
-		<xunit Assembly="$(BaseDir)\HTTPManager.MVC.Tests\bin\$(Configuration)\SecurePages.Tests.dll" />
+		<xunit Assembly="$(BaseDir)\SecurePages.Tests\bin\$(Configuration)\SecurePages.Tests.dll" />
 	</Target>
 
 	<Target Name="Compile">
@@ -28,7 +28,7 @@
 		<RemoveDir Directories="$(BuildDir)" />
 
 		<ItemGroup>
-			<MainBinaries Include="$(BaseDir)\HTTPSManager.MVC\bin\$(Configuration)\**\*.*" />
+			<MainBinaries Include="$(BaseDir)\SecurePages\bin\$(Configuration)\**\*.*" />
 			<AppStart Include="$(BaseDir)\buildscripts\App_start\**\*.*" />
 			<AppReadme Include="$(BaseDir)\buildscripts\App_Readme\**\*.*" />
 			<Content Include="$(BaseDir)\buildscripts\**\*.transform"/>
