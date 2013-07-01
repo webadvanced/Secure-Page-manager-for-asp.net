@@ -70,8 +70,8 @@ SecurePagesConfiguration.Urls.AddRegex(@"(.*)account", RegexOptions.IgnoreCase |
 To ignore URLs, such as JavaScript or CSS files you can call `IgnoreUrl` on the URL Collection
 
 ```C#
-secureUrls.IgnoreUrl(@"(.*)\.css");
-secureUrls.IgnoreUrl(@"(.*)\.js");
+SecurePagesConfiguration.Urls.IgnoreUrl(@"(.*)\.css");
+SecurePagesConfiguration.Urls.IgnoreUrl(@"(.*)\.js");
 ```
 
 `IgnoreUrl` takes a regex string and optionally as a second argument RegexOptions.
