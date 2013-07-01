@@ -45,7 +45,18 @@ Specify a regex pattern to be forced to https
 SecurePagesConfiguration.Urls.AddRegex(@"(.*)account", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Singleline);
 ```
 
-##Custom Rules##
+##Ignore URLs##
+
+To ignore URLs, such as JavaScript or CSS files you can call `IgnoreUrl` on the URL Collection
+
+```C#
+secureUrls.IgnoreUrl(@"(.*)\.css");
+secureUrls.IgnoreUrl(@"(.*)\.js");
+```
+
+`IgnoreUrl` takes a regex string and optionally as a second argument RegexOptions.
+
+##Custom Secure Request Rules##
 
 Specify a custom https match rule.  This is an example of checking the request headers to determine if the originating request was secure (needed for AppHarbor).
 
