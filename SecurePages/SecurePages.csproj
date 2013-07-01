@@ -41,6 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\IgnoreUrl.cs" />
+    <Compile Include="Entities\IUrlBase.cs" />
+    <Compile Include="Entities\UrlBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Infrastructure\SecurePageModule.cs" />
     <Compile Include="Infrastructure\SecurePagesConfiguration.cs" />

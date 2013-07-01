@@ -1,27 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Web;
-using Microsoft.AspNet.Membership.OpenAuth;
+﻿namespace SecurePages.WebForms.Tests.Account {
+    using System;
+    using System.Collections.Generic;
+    using System.Web;
+    using System.Web.UI;
 
-namespace SecurePages.WebForms.Tests.Account
-{
-    public partial class OpenAuthProviders : System.Web.UI.UserControl
-    {
-        protected void Page_Load(object sender, EventArgs e)
-        {
+    using Microsoft.AspNet.Membership.OpenAuth;
 
-            if (IsPostBack)
-            {
-                var provider = Request.Form["provider"];
-                if (provider == null)
-                {
+    public partial class OpenAuthProviders : UserControl {
+        #region Public Properties
+
+        public string ReturnUrl { get; set; }
+
+        #endregion
+
+        #region Public Methods and Operators
+
+        public IEnumerable<ProviderDetails> GetProviderNames() {
+            return OpenAuth.AuthenticationClients.GetAll();
+        }
+
+        #endregion
+
+        #region Methods
+
+        protected void Page_Load(object sender, EventArgs e) {
+            if (this.IsPostBack) {
+                string provider = this.Request.Form["provider"];
+                if (provider == null) {
                     return;
                 }
 
-                var redirectUrl = "~/Account/RegisterExternalLogin.aspx";
-                if (!String.IsNullOrEmpty(ReturnUrl))
-                {
-                    var resolvedReturnUrl = ResolveUrl(ReturnUrl);
+                string redirectUrl = "~/Account/RegisterExternalLogin.aspx";
+                if (!String.IsNullOrEmpty(this.ReturnUrl)) {
+                    string resolvedReturnUrl = this.ResolveUrl(this.ReturnUrl);
                     redirectUrl += "?ReturnUrl=" + HttpUtility.UrlEncode(resolvedReturnUrl);
                 }
 
@@ -29,15 +40,6 @@ namespace SecurePages.WebForms.Tests.Account
             }
         }
 
-
-
-        public string ReturnUrl { get; set; }
-
-
-        public IEnumerable<ProviderDetails> GetProviderNames()
-        {
-            return OpenAuth.AuthenticationClients.GetAll();
-        }
-
+        #endregion
     }
 }

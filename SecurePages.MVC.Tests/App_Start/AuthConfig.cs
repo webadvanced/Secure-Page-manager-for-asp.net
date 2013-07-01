@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Web.WebPages.OAuth;
-using HTTPSManager.MVC.Web.Tests.Models;
+﻿namespace HTTPSManager.MVC.Web.Tests {
+    public static class AuthConfig {
+        #region Public Methods and Operators
 
-namespace HTTPSManager.MVC.Web.Tests
-{
-    public static class AuthConfig
-    {
-        public static void RegisterAuth()
-        {
+        public static void RegisterAuth() {
             // To let users of this site log in using their accounts from other sites such as Microsoft, Facebook, and Twitter,
             // you must update this site. For more information visit http://go.microsoft.com/fwlink/?LinkID=252166
 
@@ -28,5 +20,7 @@ namespace HTTPSManager.MVC.Web.Tests
 
             //OAuthWebSecurity.RegisterGoogleClient();
         }
+
+        #endregion
     }
 }

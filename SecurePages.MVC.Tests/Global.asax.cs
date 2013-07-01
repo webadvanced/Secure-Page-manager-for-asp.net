@@ -1,5 +1,5 @@
-﻿namespace SecurePages.Mvc.Tests
-{
+﻿namespace SecurePages.Mvc.Tests {
+    using System.Web;
     using System.Web.Http;
     using System.Web.Mvc;
     using System.Web.Optimization;
@@ -13,10 +13,10 @@
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
 
-    public class MvcApplication : System.Web.HttpApplication
-    {
-        protected void Application_Start()
-        {
+    public class MvcApplication : HttpApplication {
+        #region Methods
+
+        protected void Application_Start() {
             AreaRegistration.RegisterAllAreas();
 
             WebApiConfig.Register(GlobalConfiguration.Configuration);
@@ -26,5 +26,7 @@
             AuthConfig.RegisterAuth();
             SecurePagesConfig.RegisterUrls(SecurePagesConfiguration.Urls);
         }
+
+        #endregion
     }
 }

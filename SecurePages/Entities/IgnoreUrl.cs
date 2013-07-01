@@ -1,4 +1,4 @@
 ﻿namespace SecurePages.Entities {
-    public class SecureUrl : UrlBase {
+    public class IgnoreUrl : UrlBase {
     }
 }

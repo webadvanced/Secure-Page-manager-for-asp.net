@@ -3,7 +3,6 @@
     using System.Linq;
     using System.Text.RegularExpressions;
 
-    using SecurePages;
     using SecurePages.Entities;
     using SecurePages.Infrastructure;
 
@@ -32,7 +31,7 @@
 
             // Act
             collection.AddRegex(@"MockRegex");
-            SecureUrl secureUrl = collection.First();
+            SecureUrl secureUrl = collection.OfType<SecureUrl>().First();
 
             // Assert
             Assert.Equal(RegexOptions.None, secureUrl.RegexOptions);
@@ -45,7 +44,7 @@
 
             // Act
             collection.AddRegex(@"MockRegex", RegexOptions.IgnoreCase);
-            SecureUrl secureUrl = collection.First();
+            SecureUrl secureUrl = collection.OfType<SecureUrl>().First();
 
             // Assert
             Assert.Equal(RegexOptions.IgnoreCase, secureUrl.RegexOptions);
@@ -104,7 +103,7 @@
 
             // Act
             collection.AddUrl("mock/url");
-            SecureUrl secureUrl = collection.First();
+            SecureUrl secureUrl = collection.OfType<SecureUrl>().First();
 
             // Assert
             Assert.Equal(SecureUrlMatchType.CaseInsensitive, secureUrl.MatchType);
@@ -117,7 +116,7 @@
 
             // Act
             collection.AddUrl("mock/url", false);
-            SecureUrl secureUrl = collection.First();
+            SecureUrl secureUrl = collection.OfType<SecureUrl>().First();
 
             // Assert
             Assert.Equal(SecureUrlMatchType.CaseSensitive, secureUrl.MatchType);
@@ -148,6 +147,65 @@
 
             // assert
             Assert.Empty(collection);
+        }
+
+        [Fact]
+        public void IgnoreUrls_ShouldReturn2_WhenThereAre2IgnorUrlTypesInCollection() {
+            // arrange
+            var collection = new SecureUrlCollection();
+            var ignoreUrlOne = new IgnoreUrl();
+            var ignoreUrlTwo = new IgnoreUrl();
+            var secureUrl = new SecureUrl();
+
+            // act
+            collection.Add(ignoreUrlOne);
+            collection.Add(ignoreUrlTwo);
+            collection.Add(secureUrl);
+
+            //assert
+            Assert.Equal(2, collection.IgnoreUrls.Count);
+            Assert.Equal(3, collection.Count());
+        }
+
+        [Fact]
+        public void SecureUrls_ShouldReturn1_WhenThereIs1SecureUrlTypeInCollection() {
+            // arrange
+            var collection = new SecureUrlCollection();
+            var ignoreUrlOne = new IgnoreUrl();
+            var ignoreUrlTwo = new IgnoreUrl();
+            var secureUrl = new SecureUrl();
+
+            // act
+            collection.Add(ignoreUrlOne);
+            collection.Add(ignoreUrlTwo);
+            collection.Add(secureUrl);
+
+            //assert
+            Assert.Equal(1, collection.SecureUrls.Count);
+            Assert.Equal(3, collection.Count());
+        }
+
+        [Fact]
+        public void IgnoreUrl_ShouldAddNewIgnoreUrlTypeToCollection() {
+            // arrange
+            var collection = new SecureUrlCollection();
+            collection.IgnoreUrl(@"test");
+
+            // act
+            var count = collection.IgnoreUrls.Count;
+
+            //assert
+            Assert.Equal(1, count);
+        }
+
+        [Fact]
+        public void IgnoreUrl_ShouldThorwArgumentException_WhenPatternIsNullOrEmpty() {
+            // arrange
+            var collection = new SecureUrlCollection();
+
+            //act and assert 
+            Assert.Throws<ArgumentException>(() => collection.IgnoreUrl(string.Empty));
+            Assert.Throws<ArgumentException>(() => collection.IgnoreUrl(null));
         }
 
         #endregion

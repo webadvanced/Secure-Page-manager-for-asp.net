@@ -1,151 +1,157 @@
-﻿using System;
-using System.Web;
-using System.Web.Security;
-using DotNetOpenAuth.AspNet;
-using Microsoft.AspNet.Membership.OpenAuth;
+﻿namespace SecurePages.WebForms.Tests.Account {
+    using System;
+    using System.Web;
+    using System.Web.Security;
+    using System.Web.UI;
 
-namespace SecurePages.WebForms.Tests.Account
-{
-    public partial class RegisterExternalLogin : System.Web.UI.Page
-    {
-        protected string ProviderName
-        {
-            get { return (string)ViewState["ProviderName"] ?? String.Empty; }
-            private set { ViewState["ProviderName"] = value; }
-        }
+    using DotNetOpenAuth.AspNet;
 
-        protected string ProviderDisplayName
-        {
-            get { return (string)ViewState["ProviderDisplayName"] ?? String.Empty; }
-            private set { ViewState["ProviderDisplayName"] = value; }
-        }
+    using Microsoft.AspNet.Membership.OpenAuth;
 
-        protected string ProviderUserId
-        {
-            get { return (string)ViewState["ProviderUserId"] ?? String.Empty; }
-            private set { ViewState["ProviderUserId"] = value; }
-        }
+    public partial class RegisterExternalLogin : Page {
+        #region Properties
 
-        protected string ProviderUserName
-        {
-            get { return (string)ViewState["ProviderUserName"] ?? String.Empty; }
-            private set { ViewState["ProviderUserName"] = value; }
-        }
-
-        protected void Page_Load()
-        {
-            if (!IsPostBack)
-            {
-                ProcessProviderResult();
+        protected string ProviderDisplayName {
+            get {
+                return (string)this.ViewState["ProviderDisplayName"] ?? String.Empty;
+            }
+            private set {
+                this.ViewState["ProviderDisplayName"] = value;
             }
         }
 
-        protected void logIn_Click(object sender, EventArgs e)
-        {
-            CreateAndLoginUser();
+        protected string ProviderName {
+            get {
+                return (string)this.ViewState["ProviderName"] ?? String.Empty;
+            }
+            private set {
+                this.ViewState["ProviderName"] = value;
+            }
         }
 
-        protected void cancel_Click(object sender, EventArgs e)
-        {
-            RedirectToReturnUrl();
+        protected string ProviderUserId {
+            get {
+                return (string)this.ViewState["ProviderUserId"] ?? String.Empty;
+            }
+            private set {
+                this.ViewState["ProviderUserId"] = value;
+            }
         }
 
-        private void ProcessProviderResult()
-        {
+        protected string ProviderUserName {
+            get {
+                return (string)this.ViewState["ProviderUserName"] ?? String.Empty;
+            }
+            private set {
+                this.ViewState["ProviderUserName"] = value;
+            }
+        }
+
+        #endregion
+
+        #region Methods
+
+        protected void Page_Load() {
+            if (!this.IsPostBack) {
+                this.ProcessProviderResult();
+            }
+        }
+
+        protected void cancel_Click(object sender, EventArgs e) {
+            this.RedirectToReturnUrl();
+        }
+
+        protected void logIn_Click(object sender, EventArgs e) {
+            this.CreateAndLoginUser();
+        }
+
+        private void CreateAndLoginUser() {
+            if (!this.IsValid) {
+                return;
+            }
+
+            CreateResult createResult = OpenAuth.CreateUser(
+                this.ProviderName, this.ProviderUserId, this.ProviderUserName, this.userName.Text);
+            if (!createResult.IsSuccessful) {
+                this.ModelState.AddModelError("UserName", createResult.ErrorMessage);
+            }
+            else {
+                // User created & associated OK
+                if (OpenAuth.Login(this.ProviderName, this.ProviderUserId, createPersistentCookie: false)) {
+                    this.RedirectToReturnUrl();
+                }
+            }
+        }
+
+        private void ProcessProviderResult() {
             // Process the result from an auth provider in the request
-            ProviderName = OpenAuth.GetProviderNameFromCurrentRequest();
+            this.ProviderName = OpenAuth.GetProviderNameFromCurrentRequest();
 
-            if (String.IsNullOrEmpty(ProviderName))
-            {
-                Response.Redirect(FormsAuthentication.LoginUrl);
+            if (String.IsNullOrEmpty(this.ProviderName)) {
+                this.Response.Redirect(FormsAuthentication.LoginUrl);
             }
 
             // Build the redirect url for OpenAuth verification
-            var redirectUrl = "~/Account/RegisterExternalLogin.aspx";
-            var returnUrl = Request.QueryString["ReturnUrl"];
-            if (!String.IsNullOrEmpty(returnUrl))
-            {
+            string redirectUrl = "~/Account/RegisterExternalLogin.aspx";
+            string returnUrl = this.Request.QueryString["ReturnUrl"];
+            if (!String.IsNullOrEmpty(returnUrl)) {
                 redirectUrl += "?ReturnUrl=" + HttpUtility.UrlEncode(returnUrl);
             }
 
             // Verify the OpenAuth payload
-            var authResult = OpenAuth.VerifyAuthentication(redirectUrl);
-            ProviderDisplayName = OpenAuth.GetProviderDisplayName(ProviderName);
-            if (!authResult.IsSuccessful)
-            {
-                Title = "External login failed";
-                userNameForm.Visible = false;
+            AuthenticationResult authResult = OpenAuth.VerifyAuthentication(redirectUrl);
+            this.ProviderDisplayName = OpenAuth.GetProviderDisplayName(this.ProviderName);
+            if (!authResult.IsSuccessful) {
+                this.Title = "External login failed";
+                this.userNameForm.Visible = false;
 
-                ModelState.AddModelError("Provider", String.Format("External login {0} failed.", ProviderDisplayName));
+                this.ModelState.AddModelError(
+                    "Provider", String.Format("External login {0} failed.", this.ProviderDisplayName));
 
                 // To view this error, enable page tracing in web.config (<system.web><trace enabled="true"/></system.web>) and visit ~/Trace.axd
-                Trace.Warn("OpenAuth", String.Format("There was an error verifying authentication with {0})", ProviderDisplayName), authResult.Error);
+                this.Trace.Warn(
+                    "OpenAuth",
+                    String.Format("There was an error verifying authentication with {0})", this.ProviderDisplayName),
+                    authResult.Error);
                 return;
             }
 
             // User has logged in with provider successfully
             // Check if user is already registered locally
-            if (OpenAuth.Login(authResult.Provider, authResult.ProviderUserId, createPersistentCookie: false))
-            {
-                RedirectToReturnUrl();
+            if (OpenAuth.Login(authResult.Provider, authResult.ProviderUserId, createPersistentCookie: false)) {
+                this.RedirectToReturnUrl();
             }
 
             // Store the provider details in ViewState
-            ProviderName = authResult.Provider;
-            ProviderUserId = authResult.ProviderUserId;
-            ProviderUserName = authResult.UserName;
+            this.ProviderName = authResult.Provider;
+            this.ProviderUserId = authResult.ProviderUserId;
+            this.ProviderUserName = authResult.UserName;
 
             // Strip the query string from action
-            Form.Action = ResolveUrl(redirectUrl);
+            this.Form.Action = this.ResolveUrl(redirectUrl);
 
-            if (User.Identity.IsAuthenticated)
-            {
+            if (this.User.Identity.IsAuthenticated) {
                 // User is already authenticated, add the external login and redirect to return url
-                OpenAuth.AddAccountToExistingUser(ProviderName, ProviderUserId, ProviderUserName, User.Identity.Name);
-                RedirectToReturnUrl();
+                OpenAuth.AddAccountToExistingUser(
+                    this.ProviderName, this.ProviderUserId, this.ProviderUserName, this.User.Identity.Name);
+                this.RedirectToReturnUrl();
             }
-            else
-            {
+            else {
                 // User is new, ask for their desired membership name
-                userName.Text = authResult.UserName;
+                this.userName.Text = authResult.UserName;
             }
         }
 
-        private void CreateAndLoginUser()
-        {
-            if (!IsValid)
-            {
-                return;
+        private void RedirectToReturnUrl() {
+            string returnUrl = this.Request.QueryString["ReturnUrl"];
+            if (!String.IsNullOrEmpty(returnUrl) && OpenAuth.IsLocalUrl(returnUrl)) {
+                this.Response.Redirect(returnUrl);
             }
-
-            var createResult = OpenAuth.CreateUser(ProviderName, ProviderUserId, ProviderUserName, userName.Text);
-            if (!createResult.IsSuccessful)
-            {
-
-                ModelState.AddModelError("UserName", createResult.ErrorMessage);
-
-            }
-            else
-            {
-                // User created & associated OK
-                if (OpenAuth.Login(ProviderName, ProviderUserId, createPersistentCookie: false))
-                {
-                    RedirectToReturnUrl();
-                }
+            else {
+                this.Response.Redirect("~/");
             }
         }
 
-        private void RedirectToReturnUrl()
-        {
-            var returnUrl = Request.QueryString["ReturnUrl"];
-            if (!String.IsNullOrEmpty(returnUrl) && OpenAuth.IsLocalUrl(returnUrl))
-            {
-                Response.Redirect(returnUrl);
-            }
-            else
-            {
-                Response.Redirect("~/");
-            }
-        }
+        #endregion
     }
 }

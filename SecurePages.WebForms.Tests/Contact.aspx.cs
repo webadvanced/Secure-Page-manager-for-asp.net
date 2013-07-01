@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+﻿namespace SecurePages.WebForms.Tests {
+    using System;
+    using System.Web.UI;
 
-namespace SecurePages.WebForms.Tests
-{
-    public partial class Contact : Page
-    {
-        protected void Page_Load(object sender, EventArgs e)
-        {
+    public partial class Contact : Page {
+        #region Methods
 
+        protected void Page_Load(object sender, EventArgs e) {
         }
+
+        #endregion
     }
 }

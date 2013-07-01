@@ -4,6 +4,7 @@ var Page_IsValid = true;
 var Page_BlockSubmit = false;
 var Page_InvalidControlToBeFocused = null;
 var Page_TextTypes = /^(text|password|file|search|tel|url|email|number|range|color|datetime|date|month|week|time|datetime-local)$/i;
+
 function ValidatorUpdateDisplay(val) {
     if (typeof(val.display) == "string") {
         if (val.display == "None") {
@@ -20,9 +21,11 @@ function ValidatorUpdateDisplay(val) {
     }
     val.style.visibility = val.isvalid ? "hidden" : "visible";
 }
+
 function ValidatorUpdateIsValid() {
     Page_IsValid = AllValidatorsValid(Page_Validators);
 }
+
 function AllValidatorsValid(validators) {
     if ((typeof(validators) != "undefined") && (validators != null)) {
         var i;
@@ -34,6 +37,7 @@ function AllValidatorsValid(validators) {
     }
     return true;
 }
+
 function ValidatorHookupControlID(controlID, val) {
     if (typeof(controlID) != "string") {
         return;
@@ -41,15 +45,15 @@ function ValidatorHookupControlID(controlID, val) {
     var ctrl = document.getElementById(controlID);
     if ((typeof(ctrl) != "undefined") && (ctrl != null)) {
         ValidatorHookupControl(ctrl, val);
-    }
-    else {
+    } else {
         val.isvalid = true;
         val.enabled = false;
     }
 }
+
 function ValidatorHookupControl(control, val) {
     if (typeof(control.tagName) != "string") {
-        return;  
+        return;
     }
     if (control.tagName != "INPUT" && control.tagName != "TEXTAREA" && control.tagName != "SELECT") {
         var i;
@@ -57,8 +61,7 @@ function ValidatorHookupControl(control, val) {
             ValidatorHookupControl(control.childNodes[i], val);
         }
         return;
-    }
-    else {
+    } else {
         if (typeof(control.Validators) == "undefined") {
             control.Validators = new Array;
             var eventType;
@@ -72,24 +75,25 @@ function ValidatorHookupControl(control, val) {
             }
             ValidatorHookupEvent(control, eventType, "ValidatorOnChange(event); ");
             if (Page_TextTypes.test(control.type)) {
-                ValidatorHookupEvent(control, "onkeypress", 
+                ValidatorHookupEvent(control, "onkeypress",
                     "event = event || window.event; if (!ValidatedTextBoxOnKeyPress(event)) { event.cancelBubble = true; if (event.stopPropagation) event.stopPropagation(); return false; } ");
             }
         }
         control.Validators[control.Validators.length] = val;
     }
 }
+
 function ValidatorHookupEvent(control, eventType, functionPrefix) {
     var ev = control[eventType];
     if (typeof(ev) == "function") {
         ev = ev.toString();
         ev = ev.substring(ev.indexOf("{") + 1, ev.lastIndexOf("}"));
-    }
-    else {
+    } else {
         ev = "";
     }
     control[eventType] = new Function("event", functionPrefix + " " + ev);
 }
+
 function ValidatorGetValue(id) {
     var control;
     control = document.getElementById(id);
@@ -98,18 +102,19 @@ function ValidatorGetValue(id) {
     }
     return ValidatorGetValueRecursive(control);
 }
-function ValidatorGetValueRecursive(control)
-{
+
+function ValidatorGetValueRecursive(control) {
     if (typeof(control.value) == "string" && (control.type != "radio" || control.checked == true)) {
         return control.value;
     }
     var i, val;
-    for (i = 0; i<control.childNodes.length; i++) {
+    for (i = 0; i < control.childNodes.length; i++) {
         val = ValidatorGetValueRecursive(control.childNodes[i]);
         if (val != "") return val;
     }
     return "";
 }
+
 function Page_ClientValidate(validationGroup) {
     Page_InvalidControlToBeFocused = null;
     if (typeof(Page_Validators) == "undefined") {
@@ -124,6 +129,7 @@ function Page_ClientValidate(validationGroup) {
     Page_BlockSubmit = !Page_IsValid;
     return Page_IsValid;
 }
+
 function ValidatorCommonOnSubmit() {
     Page_InvalidControlToBeFocused = null;
     var result = !Page_BlockSubmit;
@@ -133,26 +139,26 @@ function ValidatorCommonOnSubmit() {
     Page_BlockSubmit = false;
     return result;
 }
+
 function ValidatorEnable(val, enable) {
     val.enabled = (enable != false);
     ValidatorValidate(val);
     ValidatorUpdateIsValid();
 }
+
 function ValidatorOnChange(event) {
     event = event || window.event;
     Page_InvalidControlToBeFocused = null;
     var targetedControl;
     if ((typeof(event.srcElement) != "undefined") && (event.srcElement != null)) {
         targetedControl = event.srcElement;
-    }
-    else {
+    } else {
         targetedControl = event.target;
     }
     var vals;
     if (typeof(targetedControl.Validators) != "undefined") {
         vals = targetedControl.Validators;
-    }
-    else {
+    } else {
         if (targetedControl.tagName.toLowerCase() == "label") {
             targetedControl = document.getElementById(targetedControl.htmlFor);
             vals = targetedControl.Validators;
@@ -165,6 +171,7 @@ function ValidatorOnChange(event) {
     }
     ValidatorUpdateIsValid();
 }
+
 function ValidatedTextBoxOnKeyPress(event) {
     event = event || window.event;
     if (event.keyCode == 13) {
@@ -172,21 +179,20 @@ function ValidatedTextBoxOnKeyPress(event) {
         var vals;
         if ((typeof(event.srcElement) != "undefined") && (event.srcElement != null)) {
             vals = event.srcElement.Validators;
-        }
-        else {
+        } else {
             vals = event.target.Validators;
         }
         return AllValidatorsValid(vals);
     }
     return true;
 }
+
 function ValidatedControlOnBlur(event) {
     event = event || window.event;
     var control;
     if ((typeof(event.srcElement) != "undefined") && (event.srcElement != null)) {
         control = event.srcElement;
-    }
-    else {
+    } else {
         control = event.target;
     }
     if ((typeof(control) != "undefined") && (control != null) && (Page_InvalidControlToBeFocused == control)) {
@@ -194,6 +200,7 @@ function ValidatedControlOnBlur(event) {
         Page_InvalidControlToBeFocused = null;
     }
 }
+
 function ValidatorValidate(val, validationGroup, event) {
     val.isvalid = true;
     if ((typeof(val.enabled) == "undefined" || val.enabled != false) && IsValidationGroupMatch(val, validationGroup)) {
@@ -207,6 +214,7 @@ function ValidatorValidate(val, validationGroup, event) {
     }
     ValidatorUpdateDisplay(val);
 }
+
 function ValidatorSetFocus(val, event) {
     var ctrl;
     if (typeof(val.controlhookup) == "string") {
@@ -214,8 +222,7 @@ function ValidatorSetFocus(val, event) {
         if ((typeof(event) != "undefined") && (event != null)) {
             if ((typeof(event.srcElement) != "undefined") && (event.srcElement != null)) {
                 eventCtrl = event.srcElement;
-            }
-            else {
+            } else {
                 eventCtrl = event.target;
             }
         }
@@ -229,7 +236,7 @@ function ValidatorSetFocus(val, event) {
         ctrl = document.getElementById(val.controltovalidate);
     }
     if ((typeof(ctrl) != "undefined") && (ctrl != null) &&
-        (ctrl.tagName.toLowerCase() != "table" || (typeof(event) == "undefined") || (event == null)) && 
+        (ctrl.tagName.toLowerCase() != "table" || (typeof(event) == "undefined") || (event == null)) &&
         ((ctrl.tagName.toLowerCase() != "input") || (ctrl.type.toLowerCase() != "hidden")) &&
         (typeof(ctrl.disabled) == "undefined" || ctrl.disabled == null || ctrl.disabled == false) &&
         (typeof(ctrl.visible) == "undefined" || ctrl.visible == null || ctrl.visible != false) &&
@@ -237,7 +244,7 @@ function ValidatorSetFocus(val, event) {
         if ((ctrl.tagName.toLowerCase() == "table" && (typeof(__nonMSDOMBrowser) == "undefined" || __nonMSDOMBrowser)) ||
             (ctrl.tagName.toLowerCase() == "span")) {
             var inputElements = ctrl.getElementsByTagName("input");
-            var lastInputElement  = inputElements[inputElements.length -1];
+            var lastInputElement = inputElements[inputElements.length - 1];
             if (lastInputElement != null) {
                 ctrl = lastInputElement;
             }
@@ -248,21 +255,22 @@ function ValidatorSetFocus(val, event) {
         }
     }
 }
+
 function IsInVisibleContainer(ctrl) {
     if (typeof(ctrl.style) != "undefined" &&
-        ( ( typeof(ctrl.style.display) != "undefined" &&
-            ctrl.style.display == "none") ||
-          ( typeof(ctrl.style.visibility) != "undefined" &&
-            ctrl.style.visibility == "hidden") ) ) {
+        ((typeof(ctrl.style.display) != "undefined" &&
+                ctrl.style.display == "none") ||
+            (typeof(ctrl.style.visibility) != "undefined" &&
+                ctrl.style.visibility == "hidden"))) {
         return false;
-    }
-    else if (typeof(ctrl.parentNode) != "undefined" &&
-             ctrl.parentNode != null &&
-             ctrl.parentNode != ctrl) {
+    } else if (typeof(ctrl.parentNode) != "undefined" &&
+        ctrl.parentNode != null &&
+        ctrl.parentNode != ctrl) {
         return IsInVisibleContainer(ctrl.parentNode);
     }
     return true;
 }
+
 function IsValidationGroupMatch(control, validationGroup) {
     if ((typeof(validationGroup) == "undefined") || (validationGroup == null)) {
         return true;
@@ -273,6 +281,7 @@ function IsValidationGroupMatch(control, validationGroup) {
     }
     return (controlGroup == validationGroup);
 }
+
 function ValidatorOnLoad() {
     if (typeof(Page_Validators) == "undefined")
         return;
@@ -286,8 +295,7 @@ function ValidatorOnLoad() {
             if (val.isvalid == "False") {
                 val.isvalid = false;
                 Page_IsValid = false;
-            }
-            else {
+            } else {
                 val.isvalid = true;
             }
         } else {
@@ -305,12 +313,15 @@ function ValidatorOnLoad() {
     }
     Page_ValidationActive = true;
 }
+
 function ValidatorConvert(op, dataType, val) {
+
     function GetFullYear(year) {
         var twoDigitCutoffYear = val.cutoffyear % 100;
         var cutoffYearCentury = val.cutoffyear - twoDigitCutoffYear;
         return ((year > twoDigitCutoffYear) ? (cutoffYearCentury - 100 + year) : (cutoffYearCentury + year));
     }
+
     var num, cleanInput, m, exp;
     if (dataType == "Integer") {
         exp = /^\s*[-\+]?\d+\s*$/;
@@ -318,32 +329,29 @@ function ValidatorConvert(op, dataType, val) {
             return null;
         num = parseInt(op, 10);
         return (isNaN(num) ? null : num);
-    }
-    else if(dataType == "Double") {
+    } else if (dataType == "Double") {
         exp = new RegExp("^\\s*([-\\+])?(\\d*)\\" + val.decimalchar + "?(\\d*)\\s*$");
         m = op.match(exp);
         if (m == null)
             return null;
         if (m[2].length == 0 && m[3].length == 0)
             return null;
-        cleanInput = (m[1] != null ? m[1] : "") + (m[2].length>0 ? m[2] : "0") + (m[3].length>0 ? "." + m[3] : "");
+        cleanInput = (m[1] != null ? m[1] : "") + (m[2].length > 0 ? m[2] : "0") + (m[3].length > 0 ? "." + m[3] : "");
         num = parseFloat(cleanInput);
         return (isNaN(num) ? null : num);
-    }
-    else if (dataType == "Currency") {
+    } else if (dataType == "Currency") {
         var hasDigits = (val.digits > 0);
         var beginGroupSize, subsequentGroupSize;
         var groupSizeNum = parseInt(val.groupsize, 10);
         if (!isNaN(groupSizeNum) && groupSizeNum > 0) {
             beginGroupSize = "{1," + groupSizeNum + "}";
             subsequentGroupSize = "{" + groupSizeNum + "}";
-        }
-        else {
+        } else {
             beginGroupSize = subsequentGroupSize = "+";
         }
         exp = new RegExp("^\\s*([-\\+])?((\\d" + beginGroupSize + "(\\" + val.groupchar + "\\d" + subsequentGroupSize + ")+)|\\d*)"
-                        + (hasDigits ? "\\" + val.decimalchar + "?(\\d{0," + val.digits + "})" : "")
-                        + "\\s*$");
+            + (hasDigits ? "\\" + val.decimalchar + "?(\\d{0," + val.digits + "})" : "")
+            + "\\s*$");
         m = op.match(exp);
         if (m == null)
             return null;
@@ -352,8 +360,7 @@ function ValidatorConvert(op, dataType, val) {
         cleanInput = (m[1] != null ? m[1] : "") + m[2].replace(new RegExp("(\\" + val.groupchar + ")", "g"), "") + ((hasDigits && m[5].length > 0) ? "." + m[5] : "");
         num = parseFloat(cleanInput);
         return (isNaN(num) ? null : num);
-    }
-    else if (dataType == "Date") {
+    } else if (dataType == "Date") {
         var yearFirstExp = new RegExp("^\\s*((\\d{4})|(\\d{2}))([-/]|\\. ?)(\\d{1,2})\\4(\\d{1,2})\\.?\\s*$");
         m = op.match(yearFirstExp);
         var day, month, year;
@@ -361,9 +368,8 @@ function ValidatorConvert(op, dataType, val) {
             day = m[6];
             month = m[5];
             year = (m[2].length == 4) ? m[2] : GetFullYear(parseInt(m[3], 10));
-        }
-        else {
-            if (val.dateorder == "ymd"){
+        } else {
+            if (val.dateorder == "ymd") {
                 return null;
             }
             var yearLastExp = new RegExp("^\\s*(\\d{1,2})([-/]|\\. ?)(\\d{1,2})(?:\\s|\\2)((\\d{4})|(\\d{2}))(?:\\s\u0433\\.|\\.)?\\s*$");
@@ -374,8 +380,7 @@ function ValidatorConvert(op, dataType, val) {
             if (val.dateorder == "mdy") {
                 day = m[3];
                 month = m[1];
-            }
-            else {
+            } else {
                 day = m[1];
                 month = m[3];
             }
@@ -387,11 +392,11 @@ function ValidatorConvert(op, dataType, val) {
             date.setFullYear(year);
         }
         return (typeof(date) == "object" && year == date.getFullYear() && month == date.getMonth() && day == date.getDate()) ? date.valueOf() : null;
-    }
-    else {
+    } else {
         return op.toString();
     }
 }
+
 function ValidatorCompare(operand1, operand2, operator, val) {
     var dataType = val.type;
     var op1, op2;
@@ -402,20 +407,21 @@ function ValidatorCompare(operand1, operand2, operator, val) {
     if ((op2 = ValidatorConvert(operand2, dataType, val)) == null)
         return true;
     switch (operator) {
-        case "NotEqual":
-            return (op1 != op2);
-        case "GreaterThan":
-            return (op1 > op2);
-        case "GreaterThanEqual":
-            return (op1 >= op2);
-        case "LessThan":
-            return (op1 < op2);
-        case "LessThanEqual":
-            return (op1 <= op2);
-        default:
-            return (op1 == op2);
+    case "NotEqual":
+        return (op1 != op2);
+    case "GreaterThan":
+        return (op1 > op2);
+    case "GreaterThanEqual":
+        return (op1 >= op2);
+    case "LessThan":
+        return (op1 < op2);
+    case "LessThanEqual":
+        return (op1 <= op2);
+    default:
+        return (op1 == op2);
     }
 }
+
 function CompareValidatorEvaluateIsValid(val) {
     var value = ValidatorGetValue(val.controltovalidate);
     if (ValidatorTrim(value).length == 0)
@@ -427,8 +433,7 @@ function CompareValidatorEvaluateIsValid(val) {
         if (typeof(val.valuetocompare) == "string") {
             compareTo = val.valuetocompare;
         }
-    }
-    else {
+    } else {
         compareTo = ValidatorGetValue(val.controltocompare);
     }
     var operator = "Equal";
@@ -437,6 +442,7 @@ function CompareValidatorEvaluateIsValid(val) {
     }
     return ValidatorCompare(value, compareTo, operator, val);
 }
+
 function CustomValidatorEvaluateIsValid(val) {
     var value = "";
     if (typeof(val.controltovalidate) == "string") {
@@ -446,12 +452,13 @@ function CustomValidatorEvaluateIsValid(val) {
             return true;
         }
     }
-    var args = { Value:value, IsValid:true };
+    var args = { Value: value, IsValid: true };
     if (typeof(val.clientvalidationfunction) == "string") {
         eval(val.clientvalidationfunction + "(val, args) ;");
     }
     return args.IsValid;
 }
+
 function RegularExpressionValidatorEvaluateIsValid(val) {
     var value = ValidatorGetValue(val.controltovalidate);
     if (ValidatorTrim(value).length == 0)
@@ -460,20 +467,24 @@ function RegularExpressionValidatorEvaluateIsValid(val) {
     var matches = rx.exec(value);
     return (matches != null && value == matches[0]);
 }
+
 function ValidatorTrim(s) {
     var m = s.match(/^\s*(\S+(\s+\S+)*)\s*$/);
     return (m == null) ? "" : m[1];
 }
+
 function RequiredFieldValidatorEvaluateIsValid(val) {
-    return (ValidatorTrim(ValidatorGetValue(val.controltovalidate)) != ValidatorTrim(val.initialvalue))
+    return (ValidatorTrim(ValidatorGetValue(val.controltovalidate)) != ValidatorTrim(val.initialvalue));
 }
+
 function RangeValidatorEvaluateIsValid(val) {
     var value = ValidatorGetValue(val.controltovalidate);
     if (ValidatorTrim(value).length == 0)
         return true;
     return (ValidatorCompare(value, val.minimumvalue, "GreaterThanEqual", val) &&
-            ValidatorCompare(value, val.maximumvalue, "LessThanEqual", val));
+        ValidatorCompare(value, val.maximumvalue, "LessThanEqual", val));
 }
+
 function ValidationSummaryOnSubmit(validationGroup) {
     if (typeof(Page_ValidationSummaries) == "undefined")
         return;
@@ -491,42 +502,42 @@ function ValidationSummaryOnSubmit(validationGroup) {
                     summary.displaymode = "BulletList";
                 }
                 switch (summary.displaymode) {
-                    case "List":
-                        headerSep = "<br>";
-                        first = "";
-                        pre = "";
-                        post = "<br>";
-                        end = "";
-                        break;
-                    case "BulletList":
-                    default:
-                        headerSep = "";
-                        first = "<ul>";
-                        pre = "<li>";
-                        post = "</li>";
-                        end = "</ul>";
-                        break;
-                    case "SingleParagraph":
-                        headerSep = " ";
-                        first = "";
-                        pre = "";
-                        post = " ";
-                        end = "<br>";
-                        break;
+                case "List":
+                    headerSep = "<br>";
+                    first = "";
+                    pre = "";
+                    post = "<br>";
+                    end = "";
+                    break;
+                case "BulletList":
+                default:
+                    headerSep = "";
+                    first = "<ul>";
+                    pre = "<li>";
+                    post = "</li>";
+                    end = "</ul>";
+                    break;
+                case "SingleParagraph":
+                    headerSep = " ";
+                    first = "";
+                    pre = "";
+                    post = " ";
+                    end = "<br>";
+                    break;
                 }
                 s = "";
                 if (typeof(summary.headertext) == "string") {
                     s += summary.headertext + headerSep;
                 }
                 s += first;
-                for (i=0; i<Page_Validators.length; i++) {
+                for (i = 0; i < Page_Validators.length; i++) {
                     if (!Page_Validators[i].isvalid && typeof(Page_Validators[i].errormessage) == "string") {
                         s += pre + Page_Validators[i].errormessage + post;
                     }
                 }
                 s += end;
                 summary.innerHTML = s;
-                window.scrollTo(0,0);
+                window.scrollTo(0, 0);
             }
             if (summary.showmessagebox == "True") {
                 s = "";
@@ -534,25 +545,25 @@ function ValidationSummaryOnSubmit(validationGroup) {
                     s += summary.headertext + "\r\n";
                 }
                 var lastValIndex = Page_Validators.length - 1;
-                for (i=0; i<=lastValIndex; i++) {
+                for (i = 0; i <= lastValIndex; i++) {
                     if (!Page_Validators[i].isvalid && typeof(Page_Validators[i].errormessage) == "string") {
                         switch (summary.displaymode) {
-                            case "List":
-                                s += Page_Validators[i].errormessage;
-                                if (i < lastValIndex) {
-                                    s += "\r\n";
-                                }
-                                break;
-                            case "BulletList":
-                            default:
-                                s += "- " + Page_Validators[i].errormessage;
-                                if (i < lastValIndex) {
-                                    s += "\r\n";
-                                }
-                                break;
-                            case "SingleParagraph":
-                                s += Page_Validators[i].errormessage + " ";
-                                break;
+                        case "List":
+                            s += Page_Validators[i].errormessage;
+                            if (i < lastValIndex) {
+                                s += "\r\n";
+                            }
+                            break;
+                        case "BulletList":
+                        default:
+                            s += "- " + Page_Validators[i].errormessage;
+                            if (i < lastValIndex) {
+                                s += "\r\n";
+                            }
+                            break;
+                        case "SingleParagraph":
+                            s += Page_Validators[i].errormessage + " ";
+                            break;
                         }
                     }
                 }
@@ -561,11 +572,13 @@ function ValidationSummaryOnSubmit(validationGroup) {
         }
     }
 }
+
 if (window.jQuery) {
-    (function ($) {
+    (function($) {
         var dataValidationAttribute = "data-val",
             dataValidationSummaryAttribute = "data-valsummary",
             normalizedAttributes = { validationgroup: "validationGroup", focusonerror: "focusOnError" };
+
         function getAttributesWithPrefix(element, prefix) {
             var i,
                 attribute,
@@ -582,55 +595,66 @@ if (window.jQuery) {
             }
             return list;
         }
+
         function normalizeKey(key) {
             key = key.toLowerCase();
             return normalizedAttributes[key] === undefined ? key : normalizedAttributes[key];
         }
+
         function addValidationExpando(element) {
             var attributes = getAttributesWithPrefix(element, dataValidationAttribute + "-");
-            $.each(attributes, function (key, value) {
+            $.each(attributes, function(key, value) {
                 element[normalizeKey(key)] = value;
             });
         }
+
         function dispose(element) {
             var index = $.inArray(element, Page_Validators);
             if (index >= 0) {
                 Page_Validators.splice(index, 1);
             }
         }
+
         function addNormalizedAttribute(name, normalizedName) {
             normalizedAttributes[name.toLowerCase()] = normalizedName;
         }
+
         function parseSpecificAttribute(selector, attribute, validatorsArray) {
-            return $(selector).find("[" + attribute + "='true']").each(function (index, element) {
+            return $(selector).find("[" + attribute + "='true']").each(function(index, element) {
                 addValidationExpando(element);
-                element.dispose = function () { dispose(element); element.dispose = null; };
+                element.dispose = function() {
+                    dispose(element);
+                    element.dispose = null;
+                };
                 if ($.inArray(element, validatorsArray) === -1) {
                     validatorsArray.push(element);
                 }
             }).length;
         }
+
         function parse(selector) {
             var length = parseSpecificAttribute(selector, dataValidationAttribute, Page_Validators);
             length += parseSpecificAttribute(selector, dataValidationSummaryAttribute, Page_ValidationSummaries);
             return length;
         }
+
         function loadValidators() {
-            if (typeof (ValidatorOnLoad) === "function") {
+            if (typeof(ValidatorOnLoad) === "function") {
                 ValidatorOnLoad();
             }
-            if (typeof (ValidatorOnSubmit) === "undefined") {
-                window.ValidatorOnSubmit = function () {
+            if (typeof(ValidatorOnSubmit) === "undefined") {
+                window.ValidatorOnSubmit = function() {
                     return Page_ValidationActive ? ValidatorCommonOnSubmit() : true;
                 };
             }
         }
+
         function registerUpdatePanel() {
             if (window.Sys && Sys.WebForms && Sys.WebForms.PageRequestManager) {
                 var prm = Sys.WebForms.PageRequestManager.getInstance(),
                     postBackElement, endRequestHandler;
                 if (prm.get_isInAsyncPostBack()) {
-                    endRequestHandler = function (sender, args) {
+                    endRequestHandler = function(sender, args) {
                         if (parse(document)) {
                             loadValidators();
                         }
@@ -639,12 +663,12 @@ if (window.jQuery) {
                     };
                     prm.add_endRequest(endRequestHandler);
                 }
-                prm.add_beginRequest(function (sender, args) {
+                prm.add_beginRequest(function(sender, args) {
                     postBackElement = args.get_postBackElement();
                 });
-                prm.add_pageLoaded(function (sender, args) {
+                prm.add_pageLoaded(function(sender, args) {
                     var i, panels, valFound = 0;
-                    if (typeof (postBackElement) === "undefined") {
+                    if (typeof(postBackElement) === "undefined") {
                         return;
                     }
                     panels = args.get_panelsUpdated();
@@ -661,14 +685,15 @@ if (window.jQuery) {
                 });
             }
         }
-        $(function () {
-            if (typeof (Page_Validators) === "undefined") {
+
+        $(function() {
+            if (typeof(Page_Validators) === "undefined") {
                 window.Page_Validators = [];
             }
-            if (typeof (Page_ValidationSummaries) === "undefined") {
+            if (typeof(Page_ValidationSummaries) === "undefined") {
                 window.Page_ValidationSummaries = [];
             }
-            if (typeof (Page_ValidationActive) === "undefined") {
+            if (typeof(Page_ValidationActive) === "undefined") {
                 window.Page_ValidationActive = false;
             }
             $.WebFormValidator = {
@@ -680,5 +705,5 @@ if (window.jQuery) {
             }
             registerUpdatePanel();
         });
-    } (jQuery));
+    }(jQuery));
 }

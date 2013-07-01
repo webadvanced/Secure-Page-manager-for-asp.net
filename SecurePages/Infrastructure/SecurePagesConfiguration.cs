@@ -6,9 +6,9 @@
     public static class SecurePagesConfiguration {
         #region Constants and Fields
 
-        private static readonly SecureUrlCollection SecureUrlCollection;
-
         private static readonly IList<Func<HttpContextBase, bool>> CustomMatchRuleCollection;
+
+        private static readonly SecureUrlCollection SecureUrlCollection;
 
         #endregion
 
@@ -22,21 +22,7 @@
 
         #endregion
 
-        public static void RegisterCustomMatchRule(Func<HttpContextBase, bool> customMatchRuleFunc) {
-            if (customMatchRuleFunc == null) {
-                throw new ArgumentNullException("customMatchRuleFunc");
-            }
-
-            CustomMatchRuleCollection.Add(customMatchRuleFunc);
-        }
-
         #region Public Properties
-
-        public static SecureUrlCollection Urls {
-            get {
-                return SecureUrlCollection;
-            }
-        }
 
         public static IList<Func<HttpContextBase, bool>> CustomMatchRules {
             get {
@@ -44,15 +30,29 @@
             }
         }
 
-        #endregion
-
-        #region Properties
-
-        public static bool IgnoreLocalRequests { get; set; }
-
         public static string HttpRootUrl { get; set; }
 
         public static string HttpsRootUrl { get; set; }
+
+        public static bool IgnoreLocalRequests { get; set; }
+
+        public static SecureUrlCollection Urls {
+            get {
+                return SecureUrlCollection;
+            }
+        }
+
+        #endregion
+
+        #region Public Methods and Operators
+
+        public static void RegisterCustomMatchRule(Func<HttpContextBase, bool> customMatchRuleFunc) {
+            if (customMatchRuleFunc == null) {
+                throw new ArgumentNullException("customMatchRuleFunc");
+            }
+
+            CustomMatchRuleCollection.Add(customMatchRuleFunc);
+        }
 
         #endregion
     }

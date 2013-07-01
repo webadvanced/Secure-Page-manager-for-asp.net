@@ -3,7 +3,7 @@
 
 <asp:Content runat="server" ID="BodyContent" ContentPlaceHolderID="MainContent">
     <hgroup class="title">
-        <h1><%: Title %>.</h1>
+        <h1><%: this.Title %>.</h1>
     </hgroup>
     <section id="loginForm">
         <h2>Use a local account to log in.</h2>

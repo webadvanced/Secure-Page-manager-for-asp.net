@@ -1,24 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+﻿namespace SecurePages.WebForms.Tests.Account {
+    using System;
+    using System.Web;
+    using System.Web.UI;
 
-namespace SecurePages.WebForms.Tests.Account
-{
-    public partial class Login : Page
-    {
-        protected void Page_Load(object sender, EventArgs e)
-        {
-            RegisterHyperLink.NavigateUrl = "Register.aspx";
-            OpenAuthLogin.ReturnUrl = Request.QueryString["ReturnUrl"];
+    public partial class Login : Page {
+        #region Methods
 
-            var returnUrl = HttpUtility.UrlEncode(Request.QueryString["ReturnUrl"]);
-            if (!String.IsNullOrEmpty(returnUrl))
-            {
-                RegisterHyperLink.NavigateUrl += "?ReturnUrl=" + returnUrl;
+        protected void Page_Load(object sender, EventArgs e) {
+            this.RegisterHyperLink.NavigateUrl = "Register.aspx";
+            this.OpenAuthLogin.ReturnUrl = this.Request.QueryString["ReturnUrl"];
+
+            string returnUrl = HttpUtility.UrlEncode(this.Request.QueryString["ReturnUrl"]);
+            if (!String.IsNullOrEmpty(returnUrl)) {
+                this.RegisterHyperLink.NavigateUrl += "?ReturnUrl=" + returnUrl;
             }
         }
+
+        #endregion
     }
 }

@@ -8,6 +8,7 @@ function WebForm_PostBackOptions(eventTarget, eventArgument, validation, validat
     this.trackFocus = trackFocus;
     this.clientSubmit = clientSubmit;
 }
+
 function WebForm_DoPostBackWithOptions(options) {
     var validationResult = true;
     if (options.validation) {
@@ -24,14 +25,12 @@ function WebForm_DoPostBackWithOptions(options) {
             if ((typeof(lastFocus) != "undefined") && (lastFocus != null)) {
                 if (typeof(document.activeElement) == "undefined") {
                     lastFocus.value = options.eventTarget;
-                }
-                else {
+                } else {
                     var active = document.activeElement;
                     if ((typeof(active) != "undefined") && (active != null)) {
                         if ((typeof(active.id) != "undefined") && (active.id != null) && (active.id.length > 0)) {
                             lastFocus.value = active.id;
-                        }
-                        else if (typeof(active.name) != "undefined") {
+                        } else if (typeof(active.name) != "undefined") {
                             lastFocus.value = active.name;
                         }
                     }
@@ -43,31 +42,31 @@ function WebForm_DoPostBackWithOptions(options) {
         __doPostBack(options.eventTarget, options.eventArgument);
     }
 }
+
 var __pendingCallbacks = new Array();
 var __synchronousCallBackIndex = -1;
+
 function WebForm_DoCallback(eventTarget, eventArgument, eventCallback, context, errorCallback, useAsync) {
     var postData = __theFormPostData +
-                "__CALLBACKID=" + WebForm_EncodeCallback(eventTarget) +
-                "&__CALLBACKPARAM=" + WebForm_EncodeCallback(eventArgument);
+        "__CALLBACKID=" + WebForm_EncodeCallback(eventTarget) +
+        "&__CALLBACKPARAM=" + WebForm_EncodeCallback(eventArgument);
     if (theForm["__EVENTVALIDATION"]) {
         postData += "&__EVENTVALIDATION=" + WebForm_EncodeCallback(theForm["__EVENTVALIDATION"].value);
     }
-    var xmlRequest,e;
+    var xmlRequest, e;
     try {
         xmlRequest = new XMLHttpRequest();
-    }
-    catch(e) {
+    } catch(e) {
         try {
             xmlRequest = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        catch(e) {
+        } catch(e) {
         }
     }
     var setRequestHeaderMethodExists = true;
     try {
         setRequestHeaderMethodExists = (xmlRequest && xmlRequest.setRequestHeader);
+    } catch(e) {
     }
-    catch(e) {}
     var callback = new Object();
     callback.eventCallback = eventCallback;
     callback.context = context;
@@ -95,8 +94,7 @@ function WebForm_DoCallback(eventTarget, eventArgument, eventCallback, context, 
                 if (path.indexOf("%") === -1) {
                     action = encodeURI(path) + action.substr(queryIndex);
                 }
-            }
-            else if (action.indexOf("%") === -1) {
+            } else if (action.indexOf("%") === -1) {
                 action = encodeURI(action);
             }
         }
@@ -116,14 +114,14 @@ function WebForm_DoCallback(eventTarget, eventArgument, eventCallback, context, 
         xmlRequestFrame.id = callbackFrameID;
         xmlRequestFrame.name = callbackFrameID;
         xmlRequestFrame.style.position = "absolute";
-        xmlRequestFrame.style.top = "-100px"
+        xmlRequestFrame.style.top = "-100px";
         xmlRequestFrame.style.left = "-100px";
         try {
             if (callBackFrameUrl) {
                 xmlRequestFrame.src = callBackFrameUrl;
             }
+        } catch(e) {
         }
-        catch(e) {}
         document.body.appendChild(xmlRequestFrame);
     }
     var interval = window.setInterval(function() {
@@ -173,6 +171,7 @@ function WebForm_DoCallback(eventTarget, eventArgument, eventCallback, context, 
         }
     }, 10);
 }
+
 function WebForm_CallbackComplete() {
     for (var i = 0; i < __pendingCallbacks.length; i++) {
         callbackObject = __pendingCallbacks[i];
@@ -190,19 +189,18 @@ function WebForm_CallbackComplete() {
         }
     }
 }
+
 function WebForm_ExecuteCallback(callbackObject) {
     var response = callbackObject.xmlRequest.responseText;
     if (response.charAt(0) == "s") {
         if ((typeof(callbackObject.eventCallback) != "undefined") && (callbackObject.eventCallback != null)) {
             callbackObject.eventCallback(response.substring(1), callbackObject.context);
         }
-    }
-    else if (response.charAt(0) == "e") {
+    } else if (response.charAt(0) == "e") {
         if ((typeof(callbackObject.errorCallback) != "undefined") && (callbackObject.errorCallback != null)) {
             callbackObject.errorCallback(response.substring(1), callbackObject.context);
         }
-    }
-    else {
+    } else {
         var separatorIndex = response.indexOf("|");
         if (separatorIndex != -1) {
             var validationFieldLength = parseInt(response.substring(0, separatorIndex));
@@ -225,6 +223,7 @@ function WebForm_ExecuteCallback(callbackObject) {
         }
     }
 }
+
 function WebForm_FillFirstAvailableSlot(array, element) {
     var i;
     for (i = 0; i < array.length; i++) {
@@ -233,10 +232,12 @@ function WebForm_FillFirstAvailableSlot(array, element) {
     array[i] = element;
     return i;
 }
+
 var __nonMSDOMBrowser = (window.navigator.appName.toLowerCase().indexOf('explorer') == -1);
 var __theFormPostData = "";
 var __theFormPostCollection = new Array();
 var __callbackTextTypes = /^(text|password|hidden|search|tel|url|email|number|range|color|datetime|date|month|week|time|datetime-local)$/i;
+
 function WebForm_InitCallback() {
     var formElements = theForm.elements,
         count = formElements.length,
@@ -250,8 +251,7 @@ function WebForm_InitCallback() {
                 && (element.id != "__EVENTVALIDATION")) {
                 WebForm_InitCallbackAddField(element.name, element.value);
             }
-        }
-        else if (tagName == "select") {
+        } else if (tagName == "select") {
             var selectCount = element.options.length;
             for (var j = 0; j < selectCount; j++) {
                 var selectChild = element.options[j];
@@ -259,12 +259,12 @@ function WebForm_InitCallback() {
                     WebForm_InitCallbackAddField(element.name, element.value);
                 }
             }
-        }
-        else if (tagName == "textarea") {
+        } else if (tagName == "textarea") {
             WebForm_InitCallbackAddField(element.name, element.value);
         }
     }
 }
+
 function WebForm_InitCallbackAddField(name, value) {
     var nameValue = new Object();
     nameValue.name = name;
@@ -272,15 +272,17 @@ function WebForm_InitCallbackAddField(name, value) {
     __theFormPostCollection[__theFormPostCollection.length] = nameValue;
     __theFormPostData += WebForm_EncodeCallback(name) + "=" + WebForm_EncodeCallback(value) + "&";
 }
+
 function WebForm_EncodeCallback(parameter) {
     if (encodeURIComponent) {
         return encodeURIComponent(parameter);
-    }
-    else {
+    } else {
         return escape(parameter);
     }
 }
+
 var __disabledControlArray = new Array();
+
 function WebForm_ReEnableControls() {
     if (typeof(__enabledControlArray) == 'undefined') {
         return false;
@@ -290,8 +292,7 @@ function WebForm_ReEnableControls() {
         var c;
         if (__nonMSDOMBrowser) {
             c = document.getElementById(__enabledControlArray[i]);
-        }
-        else {
+        } else {
             c = document.all[__enabledControlArray[i]];
         }
         if ((typeof(c) != "undefined") && (c != null) && (c.disabled == true)) {
@@ -302,17 +303,19 @@ function WebForm_ReEnableControls() {
     setTimeout("WebForm_ReDisableControls()", 0);
     return true;
 }
+
 function WebForm_ReDisableControls() {
     for (var i = 0; i < __disabledControlArray.length; i++) {
         __disabledControlArray[i].disabled = true;
     }
 }
+
 function WebForm_SimulateClick(element, event) {
     var clickEvent;
     if (element) {
         if (element.click) {
             element.click();
-        } else { 
+        } else {
             clickEvent = document.createEvent("MouseEvents");
             clickEvent.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
             if (!element.dispatchEvent(clickEvent)) {
@@ -327,64 +330,62 @@ function WebForm_SimulateClick(element, event) {
     }
     return true;
 }
+
 function WebForm_FireDefaultButton(event, target) {
     if (event.keyCode == 13) {
         var src = event.srcElement || event.target;
         if (src &&
             ((src.tagName.toLowerCase() == "input") &&
-             (src.type.toLowerCase() == "submit" || src.type.toLowerCase() == "button")) ||
+                (src.type.toLowerCase() == "submit" || src.type.toLowerCase() == "button")) ||
             ((src.tagName.toLowerCase() == "a") &&
-             (src.href != null) && (src.href != "")) ||
+                (src.href != null) && (src.href != "")) ||
             (src.tagName.toLowerCase() == "textarea")) {
             return true;
         }
         var defaultButton;
         if (__nonMSDOMBrowser) {
             defaultButton = document.getElementById(target);
-        }
-        else {
+        } else {
             defaultButton = document.all[target];
         }
         if (defaultButton) {
             return WebForm_SimulateClick(defaultButton, event);
-        } 
+        }
     }
     return true;
 }
+
 function WebForm_GetScrollX() {
     if (__nonMSDOMBrowser) {
         return window.pageXOffset;
-    }
-    else {
+    } else {
         if (document.documentElement && document.documentElement.scrollLeft) {
             return document.documentElement.scrollLeft;
-        }
-        else if (document.body) {
+        } else if (document.body) {
             return document.body.scrollLeft;
         }
     }
     return 0;
 }
+
 function WebForm_GetScrollY() {
     if (__nonMSDOMBrowser) {
         return window.pageYOffset;
-    }
-    else {
+    } else {
         if (document.documentElement && document.documentElement.scrollTop) {
             return document.documentElement.scrollTop;
-        }
-        else if (document.body) {
+        } else if (document.body) {
             return document.body.scrollTop;
         }
     }
     return 0;
 }
+
 function WebForm_SaveScrollPositionSubmit() {
     if (__nonMSDOMBrowser) {
         theForm.elements['__SCROLLPOSITIONY'].value = window.pageYOffset;
         theForm.elements['__SCROLLPOSITIONX'].value = window.pageXOffset;
-    }
-    else {
+    } else {
         theForm.__SCROLLPOSITIONX.value = WebForm_GetScrollX();
         theForm.__SCROLLPOSITIONY.value = WebForm_GetScrollY();
     }
@@ -393,6 +394,7 @@ function WebForm_SaveScrollPositionSubmit() {
     }
     return true;
 }
+
 function WebForm_SaveScrollPositionOnSubmit() {
     theForm.__SCROLLPOSITIONX.value = WebForm_GetScrollX();
     theForm.__SCROLLPOSITIONY.value = WebForm_GetScrollY();
@@ -401,11 +403,11 @@ function WebForm_SaveScrollPositionOnSubmit() {
     }
     return true;
 }
+
 function WebForm_RestoreScrollPosition() {
     if (__nonMSDOMBrowser) {
         window.scrollTo(theForm.elements['__SCROLLPOSITIONX'].value, theForm.elements['__SCROLLPOSITIONY'].value);
-    }
-    else {
+    } else {
         window.scrollTo(theForm.__SCROLLPOSITIONX.value, theForm.__SCROLLPOSITIONY.value);
     }
     if ((typeof(theForm.oldOnLoad) != "undefined") && (theForm.oldOnLoad != null)) {
@@ -413,13 +415,13 @@ function WebForm_RestoreScrollPosition() {
     }
     return true;
 }
+
 function WebForm_TextBoxKeyHandler(event) {
     if (event.keyCode == 13) {
         var target;
         if (__nonMSDOMBrowser) {
             target = event.target;
-        }
-        else {
+        } else {
             target = event.srcElement;
         }
         if ((typeof(target) != "undefined") && (target != null)) {
@@ -433,9 +435,11 @@ function WebForm_TextBoxKeyHandler(event) {
     }
     return true;
 }
+
 function WebForm_TrimString(value) {
-    return value.replace(/^\s+|\s+$/g, '')
+    return value.replace(/^\s+|\s+$/g, '');
 }
+
 function WebForm_AppendToClassName(element, className) {
     var currentClassName = ' ' + WebForm_TrimString(element.className) + ' ';
     className = WebForm_TrimString(className);
@@ -444,6 +448,7 @@ function WebForm_AppendToClassName(element, className) {
         element.className = (element.className === '') ? className : element.className + ' ' + className;
     }
 }
+
 function WebForm_RemoveClassName(element, className) {
     var currentClassName = ' ' + WebForm_TrimString(element.className) + ' ';
     className = WebForm_TrimString(className);
@@ -453,22 +458,22 @@ function WebForm_RemoveClassName(element, className) {
             currentClassName.substring(index + className.length + 1, currentClassName.length));
     }
 }
+
 function WebForm_GetElementById(elementId) {
     if (document.getElementById) {
         return document.getElementById(elementId);
-    }
-    else if (document.all) {
+    } else if (document.all) {
         return document.all[elementId];
-    }
-    else return null;
+    } else return null;
 }
+
 function WebForm_GetElementByTagName(element, tagName) {
     var elements = WebForm_GetElementsByTagName(element, tagName);
     if (elements && elements.length > 0) {
         return elements[0];
-    }
-    else return null;
+    } else return null;
 }
+
 function WebForm_GetElementsByTagName(element, tagName) {
     if (element && tagName) {
         if (element.getElementsByTagName) {
@@ -480,6 +485,7 @@ function WebForm_GetElementsByTagName(element, tagName) {
     }
     return null;
 }
+
 function WebForm_GetElementDir(element) {
     if (element) {
         if (element.dir) {
@@ -489,6 +495,7 @@ function WebForm_GetElementDir(element) {
     }
     return "ltr";
 }
+
 function WebForm_GetElementPosition(element) {
     var result = new Object();
     result.x = 0;
@@ -504,22 +511,20 @@ function WebForm_GetElementPosition(element) {
             result.y += parent.offsetTop;
             var parentTagName = parent.tagName.toLowerCase();
             if (parentTagName != "table" &&
-                parentTagName != "body" && 
-                parentTagName != "html" && 
-                parentTagName != "div" && 
-                parent.clientTop && 
+                parentTagName != "body" &&
+                parentTagName != "html" &&
+                parentTagName != "div" &&
+                parent.clientTop &&
                 parent.clientLeft) {
                 result.x += parent.clientLeft;
                 result.y += parent.clientTop;
             }
             parent = parent.offsetParent;
         }
-    }
-    else if (element.left && element.top) {
+    } else if (element.left && element.top) {
         result.x = element.left;
         result.y = element.top;
-    }
-    else {
+    } else {
         if (element.x) {
             result.x = element.x;
         }
@@ -530,13 +535,13 @@ function WebForm_GetElementPosition(element) {
     if (element.offsetWidth && element.offsetHeight) {
         result.width = element.offsetWidth;
         result.height = element.offsetHeight;
-    }
-    else if (element.style && element.style.pixelWidth && element.style.pixelHeight) {
+    } else if (element.style && element.style.pixelWidth && element.style.pixelHeight) {
         result.width = element.style.pixelWidth;
         result.height = element.style.pixelHeight;
     }
     return result;
 }
+
 function WebForm_GetParentByTagName(element, tagName) {
     var parent = element.parentNode;
     var upperTagName = tagName.toUpperCase();
@@ -545,21 +550,25 @@ function WebForm_GetParentByTagName(element, tagName) {
     }
     return parent;
 }
+
 function WebForm_SetElementHeight(element, height) {
     if (element && element.style) {
         element.style.height = height + "px";
     }
 }
+
 function WebForm_SetElementWidth(element, width) {
     if (element && element.style) {
         element.style.width = width + "px";
     }
 }
+
 function WebForm_SetElementX(element, x) {
     if (element && element.style) {
         element.style.left = x + "px";
     }
 }
+
 function WebForm_SetElementY(element, y) {
     if (element && element.style) {
         element.style.top = y + "px";

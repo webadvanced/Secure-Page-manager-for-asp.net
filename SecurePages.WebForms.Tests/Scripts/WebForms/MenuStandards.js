@@ -1,6 +1,10 @@
 ﻿//CdnPath=http://ajax.aspnetcdn.com/ajax/4.5/6/MenuStandards.js
-if (!window.Sys) { window.Sys = {}; }
-if (!Sys.WebForms) { Sys.WebForms = {}; }
+if (!window.Sys) {
+    window.Sys = {};
+}
+if (!Sys.WebForms) {
+    Sys.WebForms = {};
+}
 Sys.WebForms.Menu = function(options) {
     this.items = [];
     this.depth = options.depth || 1;
@@ -14,8 +18,7 @@ Sys.WebForms.Menu = function(options) {
         options.menu = this;
         this.container = new Sys.WebForms._MenuContainer(options);
         Sys.WebForms.Menu._domHelper.setFloat(this.element, this.container.rightToLeft ? "right" : "left");
-    }
-    else {
+    } else {
         this.container = options.container;
         this.keyMap = options.keyMap;
     }
@@ -34,28 +37,23 @@ Sys.WebForms.Menu = function(options) {
                 this.element.style.top = "100%";
                 if (this.container.rightToLeft) {
                     this.element.style.right = "0px";
-                }
-                else {
+                } else {
                     this.element.style.left = "0px";
                 }
-            }
-            else {
+            } else {
                 this.element.style.top = "0px";
                 if (this.container.rightToLeft) {
                     this.element.style.right = "100%";
-                }
-                else {
+                } else {
                     this.element.style.left = "100%";
                 }
             }
             if (this.container.rightToLeft) {
                 this.keyMap = Sys.WebForms.Menu._keyboardMapping.verticalRtl;
-            }
-            else {
+            } else {
                 this.keyMap = Sys.WebForms.Menu._keyboardMapping.vertical;
             }
-        }
-        else {
+        } else {
             this.displayMode = "static";
             this.element.style.display = "block";
             if (this.container.orientation === 'horizontal') {
@@ -68,7 +66,7 @@ Sys.WebForms.Menu = function(options) {
     var count = children.length;
     for (var i = 0; i < count; i++) {
         var node = children[i];
-        if (node.nodeType !== 1) {   
+        if (node.nodeType !== 1) {
             continue;
         }
         var topLevelMenuItem = null;
@@ -223,13 +221,12 @@ Sys.WebForms.MenuItem.prototype = {
             this.applyUp(function(menuItem) {
                 menuItem.parentMenu.parentMenuItem.highlight(true);
             },
-            function(menuItem) {
-                return !menuItem.parentMenu.isStatic() && menuItem.parentMenu.parentMenuItem;
-            }
-        );
+                function(menuItem) {
+                    return !menuItem.parentMenu.isStatic() && menuItem.parentMenu.parentMenuItem;
+                }
+            );
             Sys.WebForms.Menu._domHelper.appendCssClass(this._anchor, 'highlighted');
-        }
-        else {
+        } else {
             Sys.WebForms.Menu._domHelper.removeCssClass(this._anchor, 'highlighted');
             this.setTabIndex(-1);
         }
@@ -251,8 +248,7 @@ Sys.WebForms.MenuItem.prototype = {
             });
             this.container.hoveredMenuItem = this;
             this.highlight(true);
-        }
-        else {
+        } else {
             var menuItem = this;
             while (menuItem) {
                 menuItem.highlight(false);
@@ -291,21 +287,21 @@ Sys.WebForms.MenuItem.prototype = {
     },
     navigate: function(keyCode) {
         switch (this.keyMap[keyCode]) {
-            case this.keyMap.next:
-                this.navigateNext();
-                break;
-            case this.keyMap.previous:
-                this.navigatePrevious();
-                break;
-            case this.keyMap.child:
-                this.navigateChild();
-                break;
-            case this.keyMap.parent:
-                this.navigateParent();
-                break;
-            case this.keyMap.tab:
-                this.navigateOut();
-                break;
+        case this.keyMap.next:
+            this.navigateNext();
+            break;
+        case this.keyMap.previous:
+            this.navigatePrevious();
+            break;
+        case this.keyMap.child:
+            this.navigateChild();
+            break;
+        case this.keyMap.parent:
+            this.navigateParent();
+            break;
+        case this.keyMap.tab:
+            this.navigateOut();
+            break;
         }
     },
     navigateChild: function() {
@@ -315,8 +311,7 @@ Sys.WebForms.MenuItem.prototype = {
             if (firstChild) {
                 this.container.navigateTo(firstChild);
             }
-        }
-        else {
+        } else {
             if (this.container.orientation === 'horizontal') {
                 var nextItem = this.topLevelMenuItem.nextSibling || this.topLevelMenuItem.parentMenu.firstChild();
                 if (nextItem == this.topLevelMenuItem) {
@@ -370,8 +365,7 @@ Sys.WebForms.MenuItem.prototype = {
                 if (previousItem.childMenu) {
                     this.container.navigateTo(previousItem.childMenu.firstChild());
                 }
-            }
-            else {
+            } else {
                 this.parentMenu.hide();
             }
         }
@@ -419,8 +413,7 @@ Sys.WebForms.Menu._domHelper = {
     addEvent: function(element, eventName, fn, useCapture) {
         if (element.addEventListener) {
             element.addEventListener(eventName, fn, !!useCapture);
-        }
-        else {
+        } else {
             element['on' + eventName] = fn;
         }
     },
@@ -452,12 +445,13 @@ Sys.WebForms.Menu._domHelper = {
         }
     },
     contains: function(ancestor, descendant) {
-        for (; descendant && (descendant !== ancestor); descendant = descendant.parentNode) { }
+        for (; descendant && (descendant !== ancestor); descendant = descendant.parentNode) {
+        }
         return !!descendant;
     },
     firstChild: function(element) {
         var child = element.firstChild;
-        if (child && child.nodeType !== 1) {   
+        if (child && child.nodeType !== 1) {
             child = this.nextSibling(child);
         }
         return child;
@@ -477,15 +471,14 @@ Sys.WebForms.Menu._domHelper = {
         var next = element.nextSibling;
         if (next) {
             element.parentNode.insertBefore(elementToInsert, next);
-        }
-        else if (element.parentNode) {
+        } else if (element.parentNode) {
             element.parentNode.appendChild(elementToInsert);
         }
     },
     nextSibling: function(element) {
         var sibling = element.nextSibling;
         while (sibling) {
-            if (sibling.nodeType === 1) {   
+            if (sibling.nodeType === 1) {
                 return sibling;
             }
             sibling = sibling.nextSibling;
@@ -500,9 +493,8 @@ Sys.WebForms.Menu._domHelper = {
     removeEvent: function(element, eventName, fn, useCapture) {
         if (element.removeEventListener) {
             element.removeEventListener(eventName, fn, !!useCapture);
-        }
-        else if (element.detachEvent) {
-            element.detachEvent('on' + eventName, fn)
+        } else if (element.detachEvent) {
+            element.detachEvent('on' + eventName, fn);
         }
         element['on' + eventName] = null;
     },
@@ -519,25 +511,25 @@ Sys.WebForms.Menu._domHelper = {
     },
     updateAttributeValue: function(operation, element, name, value) {
         this[operation + 'String'](
-                function() {
-                    return element.getAttribute(name);
-                },
-                function(newValue) {
-                    element.setAttribute(name, newValue);
-                },
-                value
-            );
+            function() {
+                return element.getAttribute(name);
+            },
+            function(newValue) {
+                element.setAttribute(name, newValue);
+            },
+            value
+        );
     },
     updateClassName: function(operation, element, name, value) {
         this[operation + 'String'](
-                function() {
-                    return element.className;
-                },
-                function(newValue) {
-                    element.className = newValue;
-                },
-                value
-            );
+            function() {
+                return element.className;
+            },
+            function(newValue) {
+                element.className = newValue;
+            },
+            value
+        );
     },
     _regexes: {
         getRegex: function(pattern) {
@@ -564,7 +556,7 @@ Sys.WebForms.Menu._elementObjectMapper = {
         if (mappedObject === theObject) {
             return;
         }
-        var objectId = element[this._mappingIdName] || element.id || '%' + (++this._computedId); 
+        var objectId = element[this._mappingIdName] || element.id || '%' + (++this._computedId);
         element[this._mappingIdName] = objectId;
         this._mappings[this._mappingIdName + ':' + objectId] = theObject;
         theObject.mappingId = objectId;
@@ -623,17 +615,14 @@ Sys.WebForms._MenuContainer = function(options) {
         Sys.WebForms.Menu._domHelper.appendAttributeValue(this.menu.element, 'role', 'menu');
         if (this.rightToLeft) {
             this.menu.keyMap = Sys.WebForms.Menu._keyboardMapping.verticalRtl;
-        }
-        else {
+        } else {
             this.menu.keyMap = Sys.WebForms.Menu._keyboardMapping.vertical;
         }
-    }
-    else {
+    } else {
         Sys.WebForms.Menu._domHelper.appendAttributeValue(this.menu.element, 'role', 'menubar');
         if (this.rightToLeft) {
             this.menu.keyMap = Sys.WebForms.Menu._keyboardMapping.horizontalRtl;
-        }
-        else {
+        } else {
             this.menu.keyMap = Sys.WebForms.Menu._keyboardMapping.horizontal;
         }
     }

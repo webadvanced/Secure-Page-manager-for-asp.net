@@ -11,8 +11,7 @@
         #region Public Methods and Operators
 
         [Fact]
-        public void ConstructorShouldSetDefaults()
-        {
+        public void ConstructorShouldSetDefaults() {
             Assert.True(SecurePagesConfiguration.IgnoreLocalRequests);
             Assert.NotNull(SecurePagesConfiguration.Urls);
             Assert.NotNull(SecurePagesConfiguration.CustomMatchRules);

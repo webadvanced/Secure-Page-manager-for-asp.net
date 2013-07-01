@@ -1,8 +1,6 @@
-﻿using System.Collections.Specialized;
-
-namespace SecurePages.Tests
-{
+﻿namespace SecurePages.Tests {
     using System;
+    using System.Collections.Specialized;
     using System.Web;
 
     using Moq;
@@ -13,140 +11,11 @@ namespace SecurePages.Tests
 
     using Xunit;
 
-    public class SecurePagesServiceTests
-    {
+    public class SecurePagesServiceTests {
         #region Public Methods and Operators
 
         [Fact]
-        public void IsSecureUrl_ShouldCallRegexMatch_WhenSecureUrlMatchTypeIsRegex()
-        {
-            // arrange
-            SecurePagesConfiguration.Urls.Clear();
-            SecurePagesConfiguration.Urls.AddRegex("mock/url");
-            string url = "mock/url";
-            bool wasCalled = false;
-            Func<string, SecureUrl, bool> regexMatchFunc = (s, su) =>
-            {
-                wasCalled = true;
-                return false;
-            };
-
-            // act
-            SecurePagesService.IsSecureUrl(url, regexMatchFunc);
-
-            // assert
-            Assert.True(wasCalled);
-        }
-
-        [Fact]
-        public void IsSecureUrl_ShouldReturnFalse_WhenUrlIsNullOrEmpty()
-        {
-            // arrange
-            SecurePagesConfiguration.Urls.Clear();
-            SecurePagesConfiguration.Urls.AddUrl("mockUrl");
-            string nullUrl = null;
-            string emptyStringUrl = string.Empty;
-
-            // act
-            bool nullUrlResult = SecurePagesService.IsSecureUrl(nullUrl);
-            bool emptyStringUrlResult = SecurePagesService.IsSecureUrl(emptyStringUrl);
-
-            // assert
-            Assert.False(nullUrlResult);
-            Assert.False(emptyStringUrlResult);
-        }
-
-        [Fact]
-        public void IsSecureUrl_ShouldIgnoreCase_WhenMatchTypeIsCaseInsensitive()
-        {
-            // arrange
-            SecurePagesConfiguration.Urls.Clear();
-            SecurePagesConfiguration.Urls.AddUrl("mock/url");
-            string lowerCaseUrl = "mock/url";
-            string upperCaseUrl = "Mock/URL";
-
-            // act
-            bool lowerCaseUrlResult = SecurePagesService.IsSecureUrl(lowerCaseUrl);
-            bool upperCaseUrlResult = SecurePagesService.IsSecureUrl(upperCaseUrl);
-
-            // assert
-            Assert.True(lowerCaseUrlResult);
-            Assert.True(upperCaseUrlResult);
-        }
-
-        [Fact]
-        public void IsSecureUrl_ShouldMatchCase_WhenMatchTypeIsCaseSensitive()
-        {
-            // arrange
-            SecurePagesConfiguration.Urls.Clear();
-            SecurePagesConfiguration.Urls.AddUrl("mock/url", false);
-            string lowerCaseUrl = "mock/url";
-            string upperCaseUrl = "Mock/URL";
-
-            // act
-            bool lowerCaseUrlResult = SecurePagesService.IsSecureUrl(lowerCaseUrl);
-            bool upperCaseUrlResult = SecurePagesService.IsSecureUrl(upperCaseUrl);
-
-            // assert
-            Assert.True(lowerCaseUrlResult);
-            Assert.False(upperCaseUrlResult);
-        }
-
-        [Fact]
-        public void IsSecureUrl_ShouldBreakOnFirstMatch()
-        {
-            // arrange
-            SecurePagesConfiguration.Urls.Clear();
-            SecurePagesConfiguration.Urls.AddUrl("mock/url");
-            SecurePagesConfiguration.Urls.AddUrl("url/mocking");
-            string url = "mock/url";
-
-            // act
-            bool result = SecurePagesService.IsSecureUrl(url);
-
-            // assert
-            Assert.True(result);
-        }
-
-        [Fact]
-        public void HandleRequest_ShouldNotCallResponseHandler_WhenIsSecureRequestAndIsSecureUrlAreFalse()
-        {
-            // arrange
-            bool isSecureRequest = false;
-            bool isSecureUrl = false;
-            var context = new Mock<HttpContextBase>();
-            bool flag = false;
-            Action<HttpContextBase, string> responseHandler = (c, u) => flag = true;
-            SecurePagesConfiguration.IgnoreLocalRequests = false;
-           
-            // act
-            SecurePagesService.HandelRequest(isSecureRequest, isSecureUrl, context.Object, responseHandler);
-
-            // assert
-            Assert.False(flag);
-        }
-
-        [Fact]
-        public void HandleRequest_ShouldNotCallResponseHandler_WhenIsSecureRequestAndIsSecureUrlAreTrue()
-        {
-            // arrange
-            bool isSecureRequest = true;
-            bool isSecureUrl = true;
-            var context = new Mock<HttpContextBase>();
-            bool flag = false;
-            Action<HttpContextBase, string> responseHandler = (c, u) => flag = true;
-            SecurePagesConfiguration.IgnoreLocalRequests = false;
-
-            // act
-            SecurePagesService.HandelRequest(isSecureRequest, isSecureUrl, context.Object, responseHandler);
-
-            // assert
-            Assert.False(flag);
-        }
-
-        [Fact]
-        public void HandleRequest_ShouldNotCallResponseHandler_WhenIsLocalRequestAndConfiguredtoIgnore()
-        {
+        public void HandleRequest_ShouldNotCallResponseHandler_WhenIsLocalRequestAndConfiguredtoIgnore() {
             // arrange
             bool isSecureRequest = true;
             bool isSecureUrl = false;
@@ -164,8 +33,43 @@ namespace SecurePages.Tests
         }
 
         [Fact]
-        public void HandleRequest_WhenRequestIsNotSecureAndUrlIsSupposedToBeSecureResponseHandlerIsCalledAndPassedSecureVersionOfUrl()
-        {
+        public void HandleRequest_ShouldNotCallResponseHandler_WhenIsSecureRequestAndIsSecureUrlAreFalse() {
+            // arrange
+            bool isSecureRequest = false;
+            bool isSecureUrl = false;
+            var context = new Mock<HttpContextBase>();
+            bool flag = false;
+            Action<HttpContextBase, string> responseHandler = (c, u) => flag = true;
+            SecurePagesConfiguration.IgnoreLocalRequests = false;
+
+            // act
+            SecurePagesService.HandelRequest(isSecureRequest, isSecureUrl, context.Object, responseHandler);
+
+            // assert
+            Assert.False(flag);
+        }
+
+        [Fact]
+        public void HandleRequest_ShouldNotCallResponseHandler_WhenIsSecureRequestAndIsSecureUrlAreTrue() {
+            // arrange
+            bool isSecureRequest = true;
+            bool isSecureUrl = true;
+            var context = new Mock<HttpContextBase>();
+            bool flag = false;
+            Action<HttpContextBase, string> responseHandler = (c, u) => flag = true;
+            SecurePagesConfiguration.IgnoreLocalRequests = false;
+
+            // act
+            SecurePagesService.HandelRequest(isSecureRequest, isSecureUrl, context.Object, responseHandler);
+
+            // assert
+            Assert.False(flag);
+        }
+
+        [Fact]
+        public void
+            HandleRequest_WhenRequestIsNotSecureAndUrlIsSupposedToBeSecureResponseHandlerIsCalledAndPassedSecureVersionOfUrl
+            () {
             // arrange
             bool isSecureRequest = false;
             bool isSecureUrl = true;
@@ -185,8 +89,9 @@ namespace SecurePages.Tests
         }
 
         [Fact]
-        public void HandleRequest_WhenRequestIsSecureAndUrlIsNotSupposedToBeSecureResponseHandlerIsCalledAndPassedNonSecureVersionOfUrl()
-        {
+        public void
+            HandleRequest_WhenRequestIsSecureAndUrlIsNotSupposedToBeSecureResponseHandlerIsCalledAndPassedNonSecureVersionOfUrl
+            () {
             // arrange
             bool isSecureRequest = true;
             bool isSecureUrl = false;
@@ -208,65 +113,7 @@ namespace SecurePages.Tests
         }
 
         [Fact]
-        public void RedirectPermanent_ShouldThrowArgumentNullException_WhenContextIsNull()
-        {
-            Assert.Throws<ArgumentNullException>(
-                () => SecurePagesService.RedirectPermanent(null, "http://www.webadvanced.com"));
-        }
-
-        [Fact]
-        public void RedirectPermanent_ShouldThrowArgumentException_WhenUrlIsEmptyOrNull()
-        {
-            var context = new Mock<HttpContextBase>();
-
-            Assert.Throws<ArgumentException>(
-                () => SecurePagesService.RedirectPermanent(context.Object, string.Empty));
-
-            Assert.Throws<ArgumentException>(() => SecurePagesService.RedirectPermanent(context.Object, null));
-        }
-
-        [Fact]
-        public void IsSecureRequest_ShouldReturnIsSecureConnection_WhenCustomMatchRulesIsEmpty()
-        {
-            // arrange
-            var context = new Mock<HttpContextBase>();
-            context.Setup(x => x.Request.IsSecureConnection).Returns(() => false);
-            SecurePagesConfiguration.CustomMatchRules.Clear();
-
-            // act
-            bool isSecureConnection = SecurePagesService.IsSecureRequest(context.Object);
-
-            // assert
-            Assert.False(isSecureConnection);
-        }
-
-        [Fact]
-        public void IsSecureRequest_ShouldReturnTrue_WhenCustomMatchRulesContainsASecureRule()
-        {
-            // arrange            
-            var headers = new NameValueCollection();
-            headers.Add("Test-Secure-Connection", "https");
-
-            var context = new Mock<HttpContextBase>();
-            context.Setup(x => x.Request.Headers).Returns(() => headers);
-            context.Setup(x => x.Request.IsSecureConnection).Returns(() => false);
-
-            SecurePagesConfiguration.CustomMatchRules.Clear();
-            SecurePagesConfiguration.RegisterCustomMatchRule(
-                c => string.Equals(c.Request.Headers["Test-Secure-Connection"], "https", StringComparison.InvariantCultureIgnoreCase));
-
-            // act
-            bool isSecureConnection = SecurePagesService.IsSecureRequest(context.Object);
-
-            // assert
-            Assert.True(isSecureConnection);
-        }
-
-        [Fact]
-        public void
-            IsSecureRequest_ShouldReturnIsSecureConnection_WhenCustomMatchRulesDoesNotContainASecureRule
-            ()
-        {
+        public void IsSecureRequest_ShouldReturnIsSecureConnection_WhenCustomMatchRulesDoesNotContainASecureRule() {
             // arrange
             var headers = new NameValueCollection();
             headers.Add("Test-Secure-Connection", "http");
@@ -277,7 +124,9 @@ namespace SecurePages.Tests
 
             SecurePagesConfiguration.CustomMatchRules.Clear();
             SecurePagesConfiguration.RegisterCustomMatchRule(
-                c => string.Equals(c.Request.Headers["Test-Secure-Connection"], "https", StringComparison.InvariantCultureIgnoreCase));
+                c =>
+                string.Equals(
+                    c.Request.Headers["Test-Secure-Connection"], "https", StringComparison.InvariantCultureIgnoreCase));
 
             // act
             bool isSecureConnection = SecurePagesService.IsSecureRequest(context.Object);
@@ -287,21 +136,132 @@ namespace SecurePages.Tests
         }
 
         [Fact]
-        public void NonSecureUrl_ShouldUseHttpRootUrl_WhenSpecified() {
+        public void IsSecureRequest_ShouldReturnIsSecureConnection_WhenCustomMatchRulesIsEmpty() {
             // arrange
-            SecurePagesConfiguration.HttpRootUrl = "http://mock.com/";
-            Uri uri = new Uri("https://mocksite.com/test?q=param");
+            var context = new Mock<HttpContextBase>();
+            context.Setup(x => x.Request.IsSecureConnection).Returns(() => false);
+            SecurePagesConfiguration.CustomMatchRules.Clear();
 
-            string result = SecurePagesService.NonSecureUrl(uri);
+            // act
+            bool isSecureConnection = SecurePagesService.IsSecureRequest(context.Object);
 
-            Assert.Equal("http://mock.com/test?q=param", result);
+            // assert
+            Assert.False(isSecureConnection);
+        }
+
+        [Fact]
+        public void IsSecureRequest_ShouldReturnTrue_WhenCustomMatchRulesContainsASecureRule() {
+            // arrange            
+            var headers = new NameValueCollection();
+            headers.Add("Test-Secure-Connection", "https");
+
+            var context = new Mock<HttpContextBase>();
+            context.Setup(x => x.Request.Headers).Returns(() => headers);
+            context.Setup(x => x.Request.IsSecureConnection).Returns(() => false);
+
+            SecurePagesConfiguration.CustomMatchRules.Clear();
+            SecurePagesConfiguration.RegisterCustomMatchRule(
+                c =>
+                string.Equals(
+                    c.Request.Headers["Test-Secure-Connection"], "https", StringComparison.InvariantCultureIgnoreCase));
+
+            // act
+            bool isSecureConnection = SecurePagesService.IsSecureRequest(context.Object);
+
+            // assert
+            Assert.True(isSecureConnection);
+        }
+
+        [Fact]
+        public void IsSecureUrl_ShouldBreakOnFirstMatch() {
+            // arrange
+            SecurePagesConfiguration.Urls.Clear();
+            SecurePagesConfiguration.Urls.AddUrl("mock/url");
+            SecurePagesConfiguration.Urls.AddUrl("url/mocking");
+            string url = "mock/url";
+
+            // act
+            bool result = SecurePagesService.IsSecureUrl(url);
+
+            // assert
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void IsSecureUrl_ShouldCallRegexMatch_WhenSecureUrlMatchTypeIsRegex() {
+            // arrange
+            SecurePagesConfiguration.Urls.Clear();
+            SecurePagesConfiguration.Urls.AddRegex("mock/url");
+            string url = "mock/url";
+            bool wasCalled = false;
+            Func<string, IUrlBase, bool> regexMatchFunc = (s, su) => {
+                wasCalled = true;
+                return false;
+            };
+
+            // act
+            SecurePagesService.IsSecureUrl(url, regexMatchFunc);
+
+            // assert
+            Assert.True(wasCalled);
+        }
+
+        [Fact]
+        public void IsSecureUrl_ShouldIgnoreCase_WhenMatchTypeIsCaseInsensitive() {
+            // arrange
+            SecurePagesConfiguration.Urls.Clear();
+            SecurePagesConfiguration.Urls.AddUrl("mock/url");
+            string lowerCaseUrl = "mock/url";
+            string upperCaseUrl = "Mock/URL";
+
+            // act
+            bool lowerCaseUrlResult = SecurePagesService.IsSecureUrl(lowerCaseUrl);
+            bool upperCaseUrlResult = SecurePagesService.IsSecureUrl(upperCaseUrl);
+
+            // assert
+            Assert.True(lowerCaseUrlResult);
+            Assert.True(upperCaseUrlResult);
+        }
+
+        [Fact]
+        public void IsSecureUrl_ShouldMatchCase_WhenMatchTypeIsCaseSensitive() {
+            // arrange
+            SecurePagesConfiguration.Urls.Clear();
+            SecurePagesConfiguration.Urls.AddUrl("mock/url", false);
+            string lowerCaseUrl = "mock/url";
+            string upperCaseUrl = "Mock/URL";
+
+            // act
+            bool lowerCaseUrlResult = SecurePagesService.IsSecureUrl(lowerCaseUrl);
+            bool upperCaseUrlResult = SecurePagesService.IsSecureUrl(upperCaseUrl);
+
+            // assert
+            Assert.True(lowerCaseUrlResult);
+            Assert.False(upperCaseUrlResult);
+        }
+
+        [Fact]
+        public void IsSecureUrl_ShouldReturnFalse_WhenUrlIsNullOrEmpty() {
+            // arrange
+            SecurePagesConfiguration.Urls.Clear();
+            SecurePagesConfiguration.Urls.AddUrl("mockUrl");
+            string nullUrl = null;
+            string emptyStringUrl = string.Empty;
+
+            // act
+            bool nullUrlResult = SecurePagesService.IsSecureUrl(nullUrl);
+            bool emptyStringUrlResult = SecurePagesService.IsSecureUrl(emptyStringUrl);
+
+            // assert
+            Assert.False(nullUrlResult);
+            Assert.False(emptyStringUrlResult);
         }
 
         [Fact]
         public void NonSecureUrl_ShouldUseCurrentUrl_WhenHttpRootUrlIsNotSpecified() {
             // arrange
             SecurePagesConfiguration.HttpRootUrl = string.Empty;
-            Uri uri = new Uri("https://mocksite.com/test?q=param");
+            var uri = new Uri("https://mocksite.com/test?q=param");
 
             string result = SecurePagesService.NonSecureUrl(uri);
 
@@ -309,25 +269,51 @@ namespace SecurePages.Tests
         }
 
         [Fact]
-        public void SecureUrl_ShouldUseHttpsRootUrl_WhenSpecified() {
+        public void NonSecureUrl_ShouldUseHttpRootUrl_WhenSpecified() {
             // arrange
-            SecurePagesConfiguration.HttpsRootUrl = "https://mock.com/";
-            Uri uri = new Uri("http://mocksite.com/test?q=param");
+            SecurePagesConfiguration.HttpRootUrl = "http://mock.com/";
+            var uri = new Uri("https://mocksite.com/test?q=param");
 
-            string result = SecurePagesService.SecureUrl(uri);
+            string result = SecurePagesService.NonSecureUrl(uri);
 
-            Assert.Equal("https://mock.com/test?q=param", result);
+            Assert.Equal("http://mock.com/test?q=param", result);
+        }
+
+        [Fact]
+        public void RedirectPermanent_ShouldThrowArgumentException_WhenUrlIsEmptyOrNull() {
+            var context = new Mock<HttpContextBase>();
+
+            Assert.Throws<ArgumentException>(() => SecurePagesService.RedirectPermanent(context.Object, string.Empty));
+
+            Assert.Throws<ArgumentException>(() => SecurePagesService.RedirectPermanent(context.Object, null));
+        }
+
+        [Fact]
+        public void RedirectPermanent_ShouldThrowArgumentNullException_WhenContextIsNull() {
+            Assert.Throws<ArgumentNullException>(
+                () => SecurePagesService.RedirectPermanent(null, "http://www.webadvanced.com"));
         }
 
         [Fact]
         public void SecureUrl_ShouldUseCurrentUrl_WhenHttpsRootUrlIsNotSpecified() {
             // arrange
             SecurePagesConfiguration.HttpsRootUrl = string.Empty;
-            Uri uri = new Uri("http://mocksite.com/test?q=param");
+            var uri = new Uri("http://mocksite.com/test?q=param");
 
             string result = SecurePagesService.SecureUrl(uri);
 
             Assert.Equal("https://mocksite.com/test?q=param", result);
+        }
+
+        [Fact]
+        public void SecureUrl_ShouldUseHttpsRootUrl_WhenSpecified() {
+            // arrange
+            SecurePagesConfiguration.HttpsRootUrl = "https://mock.com/";
+            var uri = new Uri("http://mocksite.com/test?q=param");
+
+            string result = SecurePagesService.SecureUrl(uri);
+
+            Assert.Equal("https://mock.com/test?q=param", result);
         }
 
         #endregion
