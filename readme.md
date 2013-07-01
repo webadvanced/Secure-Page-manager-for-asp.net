@@ -2,6 +2,26 @@
 
 Secure pages is a simple way to manage https and non-https for asp.net MVC and Web Forms sites.  Specify specific urls, use regular expressions, define custom rules and force all non-specified urls to http.  
 
+
+##Changelog:##
+
+###Version 1.0.4930.15380 - July 01 2013###
+
+- Added SecureUrlCollection.IgnoreUrl(string, RegexOptions)  providing the ability to ignore URLs 
+- Added more test coverage 
+
+###Version 1.0.4927.20371 - June 28 2013###
+
+- Added ability to set HttpRootUrl
+- Added ability to set HttpsRootUrl
+- Small bug fixes 
+
+
+
+#Adding it to your solution#
+
+Install package from nuget: `Install-Package SecurePages`
+
 **What it adds to your solution**
 
 Two Files:
