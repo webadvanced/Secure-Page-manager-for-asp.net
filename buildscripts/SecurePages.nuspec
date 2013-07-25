@@ -3,8 +3,9 @@
   <metadata>
     <id>SecurePages</id>
     <version></version>
+    <title>HTTP/HTTPS Manager for MVC and WebForms</title>
     <authors>Web Advanced</authors>
-    <projectUrl>https://github.com/webadvanced/SecurePages</projectUrl>
+    <projectUrl>https://github.com/webadvanced/Secure-Page-manager-for-asp.net</projectUrl>
     <iconUrl>http://clients.wadev.com/hp_nuget/securepages_icon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <licenseUrl>https://github.com/webadvanced/Secure-Page-manager-for-asp.net/blob/master/LICENSE</licenseUrl>

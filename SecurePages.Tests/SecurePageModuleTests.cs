@@ -1,19 +1,35 @@
 ﻿namespace SecurePages.Tests {
-    using System;
-    using System.Collections;
     using System.Collections.Generic;
-    using System.Collections.Specialized;
     using System.IO;
     using System.Web;
-    using System.Web.SessionState;
 
-    using Moq;
-
-    using Xunit;
     using SecurePages.Infrastructure;
 
+    using Xunit;
+
     public class SecurePageModuleTests {
+        #region Constants and Fields
+
         public const string AppPathModifier = "/$(SESSION)";
+
+        #endregion
+
+        #region Public Methods and Operators
+
+        public static void SetHttpContext(Dictionary<object, object> items = null, string url = null) {
+            url = url ?? "http://mockurl.com/secure?ignore=true";
+            var httpRequest = new HttpRequest("", url, "");
+            var stringWriter = new StringWriter();
+            var httpResponce = new HttpResponse(stringWriter);
+            var httpConextMock = new HttpContext(httpRequest, httpResponce);
+
+            HttpContext.Current = httpConextMock;
+            if (items != null) {
+                foreach (var item in items) {
+                    HttpContext.Current.Items.Add(item.Key, item.Value);
+                }
+            }
+        }
 
         [Fact]
         public void ContextBeginRequest_ShouldReturnWhen_ThereIsAnIgnoreUrlMatch() {
@@ -30,22 +46,8 @@
 
             Assert.True(isIgnoreWasCalled);
             Assert.False(isSecureWasCalled);
-            
         }
 
-        public static void SetHttpContext(Dictionary<object, object> items = null, string url = null) {
-            url = url ?? "http://mockurl.com/secure?ignore=true";
-            var httpRequest = new HttpRequest("", url, "");
-            var stringWriter = new StringWriter();
-            var httpResponce = new HttpResponse(stringWriter);
-            var httpConextMock = new HttpContext(httpRequest, httpResponce);
-            
-            HttpContext.Current = httpConextMock;
-            if (items != null) {
-                foreach (var item in items) {
-                    HttpContext.Current.Items.Add(item.Key, item.Value);
-                }
-            }
-        }
+        #endregion
     }
 }

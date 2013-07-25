@@ -29,7 +29,7 @@
                     c.Request.Headers["X-Forwarded-Proto"], "https", StringComparison.InvariantCultureIgnoreCase));
 
 #if DEBUG
-    //For testing only
+            //For testing only
             SecurePagesConfiguration.IgnoreLocalRequests = false;
             SecurePagesConfiguration.HttpRootUrl = "http://localhost:63670/";
             SecurePagesConfiguration.HttpsRootUrl = "https://localhost:44301/";
