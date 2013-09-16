@@ -120,7 +120,7 @@ SecurePages comes with a test helper class called `RequestedUrl` with 3 helper m
 
 - ShouldBeHttps
 
--ShouldIgnore
+- ShouldIgnore
 
 Here is an example of testing a configuration (the below code is using xUnit for testing but you can use nUnit, MSTest etc)
 
