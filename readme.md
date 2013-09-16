@@ -5,6 +5,10 @@ Secure pages is a simple way to manage https and non-https for asp.net MVC and W
 
 ##Changelog:##
 
+###Version 1.0.5007.19696 - September 16 2013###
+- Added TestHelpers.RequestedUrl - [more here](https://github.com/webadvanced/Secure-Page-manager-for-asp.net#testing-your-configuration "How to test your config")
+- Fixed SecurePagesConfig.cs references 
+
 ###Version 1.0.4930.15380 - July 01 2013###
 
 - Added SecureUrlCollection.IgnoreUrl(string, RegexOptions)  providing the ability to ignore URLs 
@@ -121,50 +125,52 @@ SecurePages comes with a test helper class called `RequestedUrl` with 3 helper m
 Here is an example of testing a configuration (the below code is using xUnit for testing but you can use nUnit, MSTest etc)
 
 ```C#
-public class SecureUrlTests {
 
-        public SecureUrlTests() {
+	public class SecureUrlTests {
+
+		public SecureUrlTests() {
 			// Make sure you register your configuration rules
-            SecurePagesConfig.RegisterUrls(SecurePagesConfiguration.Urls);
-        }
+			SecurePagesConfig.RegisterUrls(SecurePagesConfiguration.Urls);
+		}
 
-        [Fact]
-        public void WhenAccountUrlIsCalledWithHttpItShouldRedirectToHttps() {
-            var result = RequestedUrl.When("http://test.com/account/register").ShouldBeHttps();
-            Assert.True(result);
-        }
+		[Fact]
+		public void WhenAccountUrlIsCalledWithHttpItShouldRedirectToHttps() {
+			var result = RequestedUrl.When("http://test.com/account/register").ShouldBeHttps();
+			Assert.True(result);
+		}
 
-        [Fact]
-        public void WhenAccountUrlIsCalledWithHttpsItShouldStayOnHttps() {
-            var result = RequestedUrl.When("https://test.com/account/register").ShouldBeHttps();
-            Assert.True(result);
-        }
+		[Fact]
+		public void WhenAccountUrlIsCalledWithHttpsItShouldStayOnHttps() {
+			var result = RequestedUrl.When("https://test.com/account/register").ShouldBeHttps();
+			Assert.True(result);
+		}
 
-        [Fact]
-        public void WhenHomePageIsCalledWithHttpsItShouldRedirectToHttp() {
-            var result = RequestedUrl.When("https://test.com/").ShouldBeHttp();
-            Assert.True(result);
-        }
+		[Fact]
+		public void WhenHomePageIsCalledWithHttpsItShouldRedirectToHttp() {
+			var result = RequestedUrl.When("https://test.com/").ShouldBeHttp();
+			Assert.True(result);
+		}
 
-        [Fact]
-        public void WhenHomePageIsCalledWithHttpItShouldRemainOnHttp() {
-            var result = RequestedUrl.When("http://test.com/").ShouldBeHttp();
-            Assert.True(result);
-        }
+		[Fact]
+		public void WhenHomePageIsCalledWithHttpItShouldRemainOnHttp() {
+			var result = RequestedUrl.When("http://test.com/").ShouldBeHttp();
+			Assert.True(result);
+		}
 
-        [Fact]
-        public void WhenCssFilesAreCalledTheyShouldBeIgnored() {
-            var result = RequestedUrl.When("http://test.com/main.css").ShouldIgnore();
-            Assert.True(result);
-        }
+		[Fact]
+		public void WhenCssFilesAreCalledTheyShouldBeIgnored() {
+			var result = RequestedUrl.When("http://test.com/main.css").ShouldIgnore();
+			Assert.True(result);
+		}
 
-        [Fact]
-        public void WhenImageFilesAreCalledTheyShouldBeIgnored() {
-            Assert.True(RequestedUrl.When("http://test.com/img.jpg").ShouldIgnore());
-            Assert.True(RequestedUrl.When("http://test.com/img.png").ShouldIgnore());
-            Assert.True(RequestedUrl.When("http://test.com/img.gif").ShouldIgnore());
-        }
-    }
+		[Fact]
+		public void WhenImageFilesAreCalledTheyShouldBeIgnored() {
+			Assert.True(RequestedUrl.When("http://test.com/img.jpg").ShouldIgnore());
+			Assert.True(RequestedUrl.When("http://test.com/img.png").ShouldIgnore());
+			Assert.True(RequestedUrl.When("http://test.com/img.gif").ShouldIgnore());
+		}
+	}
+	
 ```
 
 
