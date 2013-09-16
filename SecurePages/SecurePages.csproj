@@ -51,6 +51,7 @@
     <Compile Include="Infrastructure\SecureUrlCollection.cs" />
     <Compile Include="Entities\SecureUrlMatchType.cs" />
     <Compile Include="Services\SecurePagesService.cs" />
+    <Compile Include="TestHelpers\RequestedUrl.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

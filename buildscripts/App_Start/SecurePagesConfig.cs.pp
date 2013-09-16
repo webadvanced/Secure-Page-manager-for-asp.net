@@ -14,11 +14,11 @@ namespace $rootnamespace$.App_Start {
 
 public static void RegisterSecurePagesConfigurations() {
             //Ignore defaults
-            secureUrls.IgnoreUrl(@"(.*)\.css");
-            secureUrls.IgnoreUrl(@"(.*)\.js");
-            secureUrls.IgnoreUrl(@"(.*)\.png");
-            secureUrls.IgnoreUrl(@"(.*)\.jpg");
-            secureUrls.IgnoreUrl(@"(.*)\.gif");
+            SecurePagesConfiguration.Urls.IgnoreUrl(@"(.*)\.css");
+            SecurePagesConfiguration.Urls.IgnoreUrl(@"(.*)\.js");
+            SecurePagesConfiguration.Urls.IgnoreUrl(@"(.*)\.png");
+            SecurePagesConfiguration.Urls.IgnoreUrl(@"(.*)\.jpg");
+            SecurePagesConfiguration.Urls.IgnoreUrl(@"(.*)\.gif");
 			
 			// Securing a collection of pages with Regex
             //SecurePagesConfiguration.Urls.AddRegex(@"(.*)account", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Singleline);
