@@ -108,6 +108,65 @@ SecurePagesConfiguration.IgnoreLocalRequests = true;
 By default, secure pages will ignore all request from localhost
 
 
+##Testing your configuration
+
+SecurePages comes with a test helper class called `RequestedUrl` with 3 helper methods:
+
+- ShouldBeHttp
+
+- ShouldBeHttps
+
+-ShouldIgnore
+
+Here is an example of testing a configuration (the below code is using xUnit for testing but you can use nUnit, MSTest etc)
+
+```C#
+public class SecureUrlTests {
+
+        public SecureUrlTests() {
+			// Make sure you register your configuration rules
+            SecurePagesConfig.RegisterUrls(SecurePagesConfiguration.Urls);
+        }
+
+        [Fact]
+        public void WhenAccountUrlIsCalledWithHttpItShouldRedirectToHttps() {
+            var result = RequestedUrl.When("http://test.com/account/register").ShouldBeHttps();
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void WhenAccountUrlIsCalledWithHttpsItShouldStayOnHttps() {
+            var result = RequestedUrl.When("https://test.com/account/register").ShouldBeHttps();
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void WhenHomePageIsCalledWithHttpsItShouldRedirectToHttp() {
+            var result = RequestedUrl.When("https://test.com/").ShouldBeHttp();
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void WhenHomePageIsCalledWithHttpItShouldRemainOnHttp() {
+            var result = RequestedUrl.When("http://test.com/").ShouldBeHttp();
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void WhenCssFilesAreCalledTheyShouldBeIgnored() {
+            var result = RequestedUrl.When("http://test.com/main.css").ShouldIgnore();
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void WhenImageFilesAreCalledTheyShouldBeIgnored() {
+            Assert.True(RequestedUrl.When("http://test.com/img.jpg").ShouldIgnore());
+            Assert.True(RequestedUrl.When("http://test.com/img.png").ShouldIgnore());
+            Assert.True(RequestedUrl.When("http://test.com/img.gif").ShouldIgnore());
+        }
+    }
+```
+
 
 
 

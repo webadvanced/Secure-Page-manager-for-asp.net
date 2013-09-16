@@ -2,6 +2,26 @@
 
 Secure pages is a simple way to manage https and non-https for asp.net MVC and Web Forms sites.  Specify specific urls, use regular expressions, define custom rules and force all non-specified urls to http.  
 
+
+##Changelog:##
+
+###Version 1.0.4930.15380 - July 01 2013###
+
+- Added SecureUrlCollection.IgnoreUrl(string, RegexOptions)  providing the ability to ignore URLs 
+- Added more test coverage 
+
+###Version 1.0.4927.20371 - June 28 2013###
+
+- Added ability to set HttpRootUrl
+- Added ability to set HttpsRootUrl
+- Small bug fixes 
+
+
+
+#Adding it to your solution#
+
+Install package from nuget: `Install-Package SecurePages`
+
 **What it adds to your solution**
 
 Two Files:
@@ -50,8 +70,8 @@ SecurePagesConfiguration.Urls.AddRegex(@"(.*)account", RegexOptions.IgnoreCase |
 To ignore URLs, such as JavaScript or CSS files you can call `IgnoreUrl` on the URL Collection
 
 ```C#
-secureUrls.IgnoreUrl(@"(.*)\.css");
-secureUrls.IgnoreUrl(@"(.*)\.js");
+SecurePagesConfiguration.Urls.IgnoreUrl(@"(.*)\.css");
+SecurePagesConfiguration.Urls.IgnoreUrl(@"(.*)\.js");
 ```
 
 `IgnoreUrl` takes a regex string and optionally as a second argument RegexOptions.
@@ -88,7 +108,61 @@ SecurePagesConfiguration.IgnoreLocalRequests = true;
 By default, secure pages will ignore all request from localhost
 
 
+##Testing your configuration
 
+SecurePages comes with a test helper class called `RequestedUrl` with 3 helper methods:
 
+- ShouldBeHttp
 
+- ShouldBeHttps
 
+-ShouldIgnore
+
+Here is an example of testing a configuration (the below code is using xUnit for testing but you can use nUnit, MSTest etc)
+
+```C#
+public class SecureUrlTests {
+
+        public SecureUrlTests() {
+			// Make sure you register your configuration rules
+            SecurePagesConfig.RegisterUrls(SecurePagesConfiguration.Urls);
+        }
+
+        [Fact]
+        public void WhenAccountUrlIsCalledWithHttpItShouldRedirectToHttps() {
+            var result = RequestedUrl.When("http://test.com/account/register").ShouldBeHttps();
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void WhenAccountUrlIsCalledWithHttpsItShouldStayOnHttps() {
+            var result = RequestedUrl.When("https://test.com/account/register").ShouldBeHttps();
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void WhenHomePageIsCalledWithHttpsItShouldRedirectToHttp() {
+            var result = RequestedUrl.When("https://test.com/").ShouldBeHttp();
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void WhenHomePageIsCalledWithHttpItShouldRemainOnHttp() {
+            var result = RequestedUrl.When("http://test.com/").ShouldBeHttp();
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void WhenCssFilesAreCalledTheyShouldBeIgnored() {
+            var result = RequestedUrl.When("http://test.com/main.css").ShouldIgnore();
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void WhenImageFilesAreCalledTheyShouldBeIgnored() {
+            Assert.True(RequestedUrl.When("http://test.com/img.jpg").ShouldIgnore());
+            Assert.True(RequestedUrl.When("http://test.com/img.png").ShouldIgnore());
+            Assert.True(RequestedUrl.When("http://test.com/img.gif").ShouldIgnore());
+        }
+    }
+```
