@@ -124,7 +124,7 @@ SecurePages comes with a test helper class called `RequestedUrl` with 3 helper m
 
 Here is an example of testing a configuration (the below code is using xUnit for testing but you can use nUnit, MSTest etc)
 
-**The rules
+**The rules**
 
 ```C#
             SecurePagesConfiguration.Urls.IgnoreUrl(@"(.*)\.css");
@@ -140,7 +140,7 @@ Here is an example of testing a configuration (the below code is using xUnit for
 
 ```
 
-**The tests
+**The tests**
 
 ```C#
 
