@@ -124,6 +124,24 @@ SecurePages comes with a test helper class called `RequestedUrl` with 3 helper m
 
 Here is an example of testing a configuration (the below code is using xUnit for testing but you can use nUnit, MSTest etc)
 
+**The rules
+
+```C#
+            SecurePagesConfiguration.Urls.IgnoreUrl(@"(.*)\.css");
+            SecurePagesConfiguration.Urls.IgnoreUrl(@"(.*)\.js");
+            SecurePagesConfiguration.Urls.IgnoreUrl(@"(.*)\.png");
+            SecurePagesConfiguration.Urls.IgnoreUrl(@"(.*)\.jpg");
+            SecurePagesConfiguration.Urls.IgnoreUrl(@"(.*)\.gif");
+			
+			//Securing all pages with account/
+            SecurePagesConfiguration.Urls.AddRegex(@"(.*)account", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Singleline);
+			
+			//All other urls will be forced to http
+
+```
+
+**The tests
+
 ```C#
 
 	public class SecureUrlTests {
