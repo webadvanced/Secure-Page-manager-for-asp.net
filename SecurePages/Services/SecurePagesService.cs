@@ -61,7 +61,7 @@
 
         public static string NonSecureUrl(Uri uri) {
             return string.IsNullOrEmpty(SecurePagesConfiguration.HttpRootUrl)
-                       ? uri.AbsoluteUri.Replace("https", "http")
+                       ? CompleteUrl("http", uri)
                        : string.Format("{0}{1}", SecurePagesConfiguration.HttpRootUrl, uri.PathAndQuery.TrimStart('/'));
         }
 
@@ -80,13 +80,17 @@
 
         public static string SecureUrl(Uri uri) {
             return string.IsNullOrEmpty(SecurePagesConfiguration.HttpsRootUrl)
-                       ? uri.AbsoluteUri.Replace("http", "https")
+                       ? CompleteUrl("https", uri)
                        : string.Format("{0}{1}", SecurePagesConfiguration.HttpsRootUrl, uri.PathAndQuery.TrimStart('/'));
         }
 
         #endregion
 
         #region Methods
+
+        protected static string CompleteUrl(string scheme, Uri uri) {
+            return string.Format("{0}://{1}{2}", scheme, uri.Host, uri.PathAndQuery);
+        }
 
         protected static bool MatchUrls<T>(
             string url, IList<T> urls, Func<string, IUrlBase, bool> matchRegexFunc = null) where T : IUrlBase {

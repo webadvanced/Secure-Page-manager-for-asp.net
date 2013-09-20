@@ -68,11 +68,11 @@
 
         [Fact]
         public void
-            HandleRequest_WhenRequestIsNotSecureAndUrlIsSupposedToBeSecureResponseHandlerIsCalledAndPassedSecureVersionOfUrl
-            () {
+            HandleRequest_WhenRequestIsNotSecureAndUrlIsSupposedToBeSecureResponseHandlerIsCalledAndPassedSecureVersionOfUrl() {
             // arrange
             bool isSecureRequest = false;
             bool isSecureUrl = true;
+            SecurePagesConfiguration.HttpRootUrl = "http://www.webadvanced.com/";
             var context = new Mock<HttpContextBase>();
             string responseUrl = string.Empty;
             Action<HttpContextBase, string> responseHandler = (c, u) => responseUrl = u;
