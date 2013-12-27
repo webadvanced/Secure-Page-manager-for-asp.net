@@ -24,7 +24,7 @@ public static void RegisterSecurePagesConfigurations() {
             //SecurePagesConfiguration.Urls.AddRegex(@"(.*)account", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Singleline);
 
             //Securing a page by specifying its url
-            //SecurePagesConfiguration.Urls.Add("/cart");
+            //SecurePagesConfiguration.Urls.AddUrl("/cart");
 
             //Registering a custom rule (Example for AppHarbor)
             //SecurePagesConfiguration.RegisterCustomMatchRule(c => string.Equals(c.Request.Headers["X-Forwarded-Proto"], "https", StringComparison.InvariantCultureIgnoreCase));

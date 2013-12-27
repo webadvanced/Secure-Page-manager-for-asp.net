@@ -5,6 +5,10 @@ Secure pages is a simple way to manage https and non-https for asp.net MVC and W
 
 ##Changelog:##
 
+###Version 1.0.5109.19336 - December 27 2013###
+- Removed majority of string usage and replaced with Uri.
+- Fixed small bugs in TestHelpers.RequestedUrl 
+
 ###Version 1.0.5007.19696 - September 16 2013###
 - Added TestHelpers.RequestedUrl - [more here](https://github.com/webadvanced/Secure-Page-manager-for-asp.net#testing-your-configuration "How to test your config")
 - Fixed SecurePagesConfig.cs references 

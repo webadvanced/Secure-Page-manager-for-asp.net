@@ -6,38 +6,43 @@
     using Xunit;
 
     public class SecureUrlTests {
+        #region Constructors and Destructors
 
         public SecureUrlTests() {
             SecurePagesConfig.RegisterUrls(SecurePagesConfiguration.Urls);
         }
 
+        #endregion
+
+        #region Public Methods and Operators
+
         [Fact]
         public void WhenAccountUrlIsCalledWithHttpItShouldRedirectToHttps() {
-            var result = RequestedUrl.When("http://test.com/account/register").ShouldBeHttps();
+            bool result = RequestedUrl.When("http://test.com/account/register").ShouldBeHttps();
             Assert.True(result);
         }
 
         [Fact]
         public void WhenAccountUrlIsCalledWithHttpsItShouldStayOnHttps() {
-            var result = RequestedUrl.When("https://test.com/account/register").ShouldBeHttps();
-            Assert.True(result);
-        }
-
-        [Fact]
-        public void WhenHomePageIsCalledWithHttpsItShouldRedirectToHttp() {
-            var result = RequestedUrl.When("http://test.com/").ShouldBeHttp();
-            Assert.True(result);
-        }
-
-        [Fact]
-        public void WhenHomePageIsCalledWithHttpItShouldRemainOnHttp() {
-            var result = RequestedUrl.When("http://test.com/").ShouldBeHttp();
+            bool result = RequestedUrl.When("https://test.com/account/register").ShouldBeHttps();
             Assert.True(result);
         }
 
         [Fact]
         public void WhenCssFilesAreCalledTheyShouldBeIgnored() {
-            var result = RequestedUrl.When("http://test.com/main.css").ShouldIgnore();
+            bool result = RequestedUrl.When("http://test.com/main.css").ShouldIgnore();
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void WhenHomePageIsCalledWithHttpItShouldRemainOnHttp() {
+            bool result = RequestedUrl.When("http://test.com/").ShouldBeHttp();
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void WhenHomePageIsCalledWithHttpsItShouldRedirectToHttp() {
+            bool result = RequestedUrl.When("http://test.com/").ShouldBeHttp();
             Assert.True(result);
         }
 
@@ -47,5 +52,7 @@
             Assert.True(RequestedUrl.When("http://test.com/img.png").ShouldIgnore());
             Assert.True(RequestedUrl.When("http://test.com/img.gif").ShouldIgnore());
         }
+
+        #endregion
     }
 }
