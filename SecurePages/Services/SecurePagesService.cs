@@ -34,8 +34,8 @@
             responseHandler(context, NonSecureUrl(uri));
         }
 
-        public static bool IsIgnoreUrl(string url, Func<string, IUrlBase, bool> matchRegexFunc = null) {
-            return MatchUrls(url, SecurePagesConfiguration.Urls.IgnoreUrls, matchRegexFunc);
+        public static bool IsIgnoreUrl(Uri uri, Func<Uri, IUrlBase, bool> matchRegexFunc = null) {
+            return MatchUrls(uri, SecurePagesConfiguration.Urls.IgnoreUrls, matchRegexFunc);
         }
 
         public static bool IsSecureRequest(HttpContextBase context) {
@@ -51,12 +51,12 @@
             return context.Request.IsSecureConnection;
         }
 
-        public static bool IsSecureUrl(string url, Func<string, IUrlBase, bool> matchRegexFunc = null) {
-            return MatchUrls(url, SecurePagesConfiguration.Urls.SecureUrls, matchRegexFunc);
+        public static bool IsSecureUrl(Uri uri, Func<Uri, IUrlBase, bool> matchRegexFunc = null) {
+            return MatchUrls(uri, SecurePagesConfiguration.Urls.SecureUrls, matchRegexFunc);
         }
 
-        public static bool MatchRegex(string url, IUrlBase secureUrl) {
-            return Regex.IsMatch(url, secureUrl.Url, secureUrl.RegexOptions);
+        public static bool MatchRegex(Uri uri, IUrlBase secureUrl) {
+            return Regex.IsMatch(uri.AbsoluteUri, secureUrl.Url, secureUrl.RegexOptions);
         }
 
         public static string NonSecureUrl(Uri uri) {
@@ -93,23 +93,23 @@
         }
 
         protected static bool MatchUrls<T>(
-            string url, IList<T> urls, Func<string, IUrlBase, bool> matchRegexFunc = null) where T : IUrlBase {
+            Uri uri, IList<T> urls, Func<Uri, IUrlBase, bool> matchRegexFunc = null) where T : IUrlBase {
             matchRegexFunc = matchRegexFunc ?? MatchRegex;
 
-            if (string.IsNullOrEmpty(url)) {
+            if (uri == null) {
                 return false;
             }
 
             bool match = false;
-
+            string relative = uri.AbsolutePath;
             foreach (T secureUrl in urls) {
                 if (secureUrl.MatchType == SecureUrlMatchType.Regex) {
-                    match = matchRegexFunc(url, secureUrl);
+                    match = matchRegexFunc(uri, secureUrl);
                 }
                 else {
                     match = (secureUrl.MatchType == SecureUrlMatchType.CaseInsensitive)
-                                ? url.Equals(secureUrl.Url, StringComparison.InvariantCultureIgnoreCase)
-                                : url.Equals(secureUrl.Url);
+                                ? relative.Equals(secureUrl.Url, StringComparison.InvariantCultureIgnoreCase)
+                                : relative.Equals(secureUrl.Url);
                 }
                 if (match) {
                     break;

@@ -25,7 +25,7 @@
 
         [Fact]
         public void WhenHomePageIsCalledWithHttpsItShouldRedirectToHttp() {
-            var result = RequestedUrl.When("https://test.com/").ShouldBeHttp();
+            var result = RequestedUrl.When("http://test.com/").ShouldBeHttp();
             Assert.True(result);
         }
 

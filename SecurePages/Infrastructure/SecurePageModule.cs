@@ -17,9 +17,9 @@
 
         #region Public Properties
 
-        public static Func<string, Func<string, IUrlBase, bool>, bool> IsIgnoreUrlFunc { get; set; }
+        public static Func<Uri, Func<Uri, IUrlBase, bool>, bool> IsIgnoreUrlFunc { get; set; }
 
-        public static Func<string, Func<string, IUrlBase, bool>, bool> IsSecureUrlFunc { get; set; }
+        public static Func<Uri, Func<Uri, IUrlBase, bool>, bool> IsSecureUrlFunc { get; set; }
 
         #endregion
 
@@ -27,12 +27,12 @@
 
         public static void ContextBeginRequest(object sender, EventArgs e) {
             HttpContextBase context = new HttpContextWrapper(HttpContext.Current);
-            string url = context.Request.RawUrl;
-            bool shouldIgnore = IsIgnoreUrlFunc.Invoke(url, null);
+            Uri uri = context.Request.Url;
+            bool shouldIgnore = IsIgnoreUrlFunc.Invoke(uri, null);
             if (shouldIgnore) {
                 return;
             }
-            bool isSecureUrl = IsSecureUrlFunc.Invoke(url, null);
+            bool isSecureUrl = IsSecureUrlFunc.Invoke(uri, null);
             bool isSecureRequest = SecurePagesService.IsSecureRequest(context);
             SecurePagesService.HandelRequest(isSecureRequest, isSecureUrl, context);
         }

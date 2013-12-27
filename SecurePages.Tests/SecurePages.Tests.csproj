@@ -62,6 +62,7 @@
     <Compile Include="SecurePageModuleTests.cs" />
     <Compile Include="SecurePagesConfigurationTests.cs" />
     <Compile Include="SecurePagesServiceTests.cs" />
+    <Compile Include="SecurePagesTestBase.cs" />
     <Compile Include="SecureUrlCollectionTests.cs" />
   </ItemGroup>
   <ItemGroup>

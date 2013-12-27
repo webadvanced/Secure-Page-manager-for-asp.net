@@ -11,7 +11,7 @@
 
     using Xunit;
 
-    public class SecurePagesServiceTests {
+    public class SecurePagesServiceTests : SecurePagesTestBase {
         #region Public Methods and Operators
 
         [Fact]
@@ -82,7 +82,7 @@
 
             // act
             SecurePagesService.HandelRequest(isSecureRequest, isSecureUrl, context.Object, responseHandler);
-
+            
             // assert
             Assert.NotEmpty(responseUrl);
             Assert.Equal(responseUrl, "https://www.webadvanced.com/");
@@ -176,12 +176,12 @@
         public void IsSecureUrl_ShouldBreakOnFirstMatch() {
             // arrange
             SecurePagesConfiguration.Urls.Clear();
-            SecurePagesConfiguration.Urls.AddUrl("mock/url");
-            SecurePagesConfiguration.Urls.AddUrl("url/mocking");
-            string url = "mock/url";
+            SecurePagesConfiguration.Urls.AddUrl("/mock/url");
+            SecurePagesConfiguration.Urls.AddUrl("/url/mocking");
+            var uri = AbsoluteUri("mock/url");
 
             // act
-            bool result = SecurePagesService.IsSecureUrl(url);
+            bool result = SecurePagesService.IsSecureUrl(uri);
 
             // assert
             Assert.True(result);
@@ -192,15 +192,15 @@
             // arrange
             SecurePagesConfiguration.Urls.Clear();
             SecurePagesConfiguration.Urls.AddRegex("mock/url");
-            string url = "mock/url";
+            var uri = AbsoluteUri("mock/url");
             bool wasCalled = false;
-            Func<string, IUrlBase, bool> regexMatchFunc = (s, su) => {
+            Func<Uri, IUrlBase, bool> regexMatchFunc = (s, su) => {
                 wasCalled = true;
                 return false;
             };
 
             // act
-            SecurePagesService.IsSecureUrl(url, regexMatchFunc);
+            SecurePagesService.IsSecureUrl(uri, regexMatchFunc);
 
             // assert
             Assert.True(wasCalled);
@@ -210,13 +210,13 @@
         public void IsSecureUrl_ShouldIgnoreCase_WhenMatchTypeIsCaseInsensitive() {
             // arrange
             SecurePagesConfiguration.Urls.Clear();
-            SecurePagesConfiguration.Urls.AddUrl("mock/url");
-            string lowerCaseUrl = "mock/url";
-            string upperCaseUrl = "Mock/URL";
+            SecurePagesConfiguration.Urls.AddUrl("/mock/url");
+            var lowerCaseUri = AbsoluteUri("mock/url");
+            var upperCaseUri = AbsoluteUri("Mock/URL");
 
             // act
-            bool lowerCaseUrlResult = SecurePagesService.IsSecureUrl(lowerCaseUrl);
-            bool upperCaseUrlResult = SecurePagesService.IsSecureUrl(upperCaseUrl);
+            bool lowerCaseUrlResult = SecurePagesService.IsSecureUrl(lowerCaseUri);
+            bool upperCaseUrlResult = SecurePagesService.IsSecureUrl(upperCaseUri);
 
             // assert
             Assert.True(lowerCaseUrlResult);
@@ -227,13 +227,13 @@
         public void IsSecureUrl_ShouldMatchCase_WhenMatchTypeIsCaseSensitive() {
             // arrange
             SecurePagesConfiguration.Urls.Clear();
-            SecurePagesConfiguration.Urls.AddUrl("mock/url", false);
-            string lowerCaseUrl = "mock/url";
-            string upperCaseUrl = "Mock/URL";
+            SecurePagesConfiguration.Urls.AddUrl("/mock/url", false);
+            var lowerCaseUri = AbsoluteUri("mock/url");
+            var upperCaseUri = AbsoluteUri("Mock/URL");
 
             // act
-            bool lowerCaseUrlResult = SecurePagesService.IsSecureUrl(lowerCaseUrl);
-            bool upperCaseUrlResult = SecurePagesService.IsSecureUrl(upperCaseUrl);
+            bool lowerCaseUrlResult = SecurePagesService.IsSecureUrl(lowerCaseUri);
+            bool upperCaseUrlResult = SecurePagesService.IsSecureUrl(upperCaseUri);
 
             // assert
             Assert.True(lowerCaseUrlResult);
@@ -241,20 +241,16 @@
         }
 
         [Fact]
-        public void IsSecureUrl_ShouldReturnFalse_WhenUrlIsNullOrEmpty() {
+        public void IsSecureUrl_ShouldReturnFalse_WhenUriIsNull() {
             // arrange
             SecurePagesConfiguration.Urls.Clear();
             SecurePagesConfiguration.Urls.AddUrl("mockUrl");
-            string nullUrl = null;
-            string emptyStringUrl = string.Empty;
 
             // act
-            bool nullUrlResult = SecurePagesService.IsSecureUrl(nullUrl);
-            bool emptyStringUrlResult = SecurePagesService.IsSecureUrl(emptyStringUrl);
+            bool nullUrlResult = SecurePagesService.IsSecureUrl(null);
 
             // assert
             Assert.False(nullUrlResult);
-            Assert.False(emptyStringUrlResult);
         }
 
         [Fact]
