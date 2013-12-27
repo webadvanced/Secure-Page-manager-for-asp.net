@@ -76,10 +76,9 @@
             var context = new Mock<HttpContextBase>();
             string responseUrl = string.Empty;
             Action<HttpContextBase, string> responseHandler = (c, u) => responseUrl = u;
-            SecurePagesConfiguration.IgnoreLocalRequests = false;
             context.Setup(x => x.Request.IsLocal).Returns(() => false);
             context.Setup(x => x.Request.Url).Returns(() => new Uri("http://www.webadvanced.com/"));
-
+            SecurePagesConfiguration.IgnoreLocalRequests = false;
             // act
             SecurePagesService.HandelRequest(isSecureRequest, isSecureUrl, context.Object, responseHandler);
             

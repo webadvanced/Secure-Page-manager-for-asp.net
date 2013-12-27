@@ -30,7 +30,11 @@
             bool isSecureUrl = SecurePagesService.IsSecureUrl(new Uri(_url));
             string resultUrl = string.Empty;
 
-            SecurePagesService.HandelRequest(isSecureRequest, isSecureUrl, HttpContextBaseFactory(), (c, s) => resultUrl = s);
+            SecurePagesService.HandelRequest(
+                isSecureRequest,
+                isSecureUrl,
+                HttpContextBaseFactory(),
+                (c, s) => resultUrl = s);
 
             return resultUrl.Contains("http://") || (resultUrl == string.Empty && !isSecureRequest);
         }
@@ -40,7 +44,11 @@
             bool isSecureUrl = SecurePagesService.IsSecureUrl(new Uri(_url));
             string resultUrl = string.Empty;
 
-            SecurePagesService.HandelRequest(isSecureRequest, isSecureUrl, HttpContextBaseFactory(), (c, s) => resultUrl = s);
+            SecurePagesService.HandelRequest(
+                isSecureRequest,
+                isSecureUrl,
+                HttpContextBaseFactory(),
+                (c, s) => resultUrl = s);
 
             return resultUrl.Contains("https://") || (resultUrl == string.Empty && isSecureRequest);
         }
@@ -51,8 +59,12 @@
 
         #endregion
 
+        #region Methods
+
         private HttpContextBase HttpContextBaseFactory() {
             return new HttpContextWrapper(new HttpContext(new HttpRequest(null, _url, null), new HttpResponse(null)));
         }
+
+        #endregion
     }
 }
